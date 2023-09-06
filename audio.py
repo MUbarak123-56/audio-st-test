@@ -11,8 +11,8 @@ checkpoint = "openai/whisper-small.en"
 @st.cache(allow_output_mutation=True)
 def model():
     #pipe = pipeline("automatic-speech-recognition", model=checkpoint)
-    processor = WhisperProcessor.from_pretrained("openai/whisper-large-v2")
-    model = WhisperForConditionalGeneration.from_pretrained("openai/whisper-large-v2")
+    processor = WhisperProcessor.from_pretrained(checkpoint)
+    model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
     model.config.forced_decoder_ids = None
     return processor, model
 
