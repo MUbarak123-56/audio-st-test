@@ -25,7 +25,7 @@ audio_bytes = audio_recorder(
     sample_rate = 16_000,
 )
 
-pipe = model()
+processor, model = model()
 
 if audio_bytes:
     st.audio(audio_bytes, format="audio/wav")
@@ -34,4 +34,4 @@ if audio_bytes:
     #predicted_ids = model.generate(input_features)
     #transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
     #st.write(pipe(audio_bytes)["text"])
-    print(audio_bytes)
+    st.write(audio_bytes)
