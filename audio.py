@@ -1,5 +1,4 @@
 import streamlit as st
-from audiorecorder import audiorecorder
 from transformers import pipeline
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 from audio_recorder_streamlit import audio_recorder
