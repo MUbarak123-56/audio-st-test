@@ -22,7 +22,6 @@ audio_bytes = audio_recorder(
     neutral_color="#6aa36f",
     icon_name="user",
     icon_size="3x",
-    sample_rate = 16_000,
 )
 
 #processor, model = model()
