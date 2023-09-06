@@ -12,12 +12,13 @@ def model():
     pipe = pipeline("automatic-speech-recognition", model=checkpoint)
     return pipe
 
-audio_bytes = audio_bytes = audio_recorder(
+audio_bytes = audio_recorder(
     text="",
     recording_color="#e8b62c",
     neutral_color="#6aa36f",
     icon_name="user",
     icon_size="3x",
+    sample_rate = 16_000,
 )
 
 pipe = model()
