@@ -20,6 +20,8 @@ audio_bytes = audio_bytes = audio_recorder(
     icon_size="3x",
 )
 
+pipe = model()
+
 if audio_bytes:
     st.audio(audio_bytes, format="audio/wav")
     st.write(pipe(audio_bytes)["text"])
