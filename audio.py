@@ -25,7 +25,7 @@ audio_bytes = audio_recorder(
     sample_rate = 16_000,
 )
 
-processor, model = model()
+#processor, model = model()
 
 if audio_bytes:
     st.audio(audio_bytes, format="audio/wav")
