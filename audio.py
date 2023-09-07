@@ -23,7 +23,7 @@ pipe = model()
 
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
-    audio_np = np.array(new_audio)
+    #audio_np = np.array(new_audio)
     data_s16 = np.frombuffer(bytes, dtype=np.int16, count=len(bytes)//2, offset=0)
     float_data = data_s16 * 0.5**15
     #input_features = processor(sample["array"], sampling_rate=sample["sampling_rate"], return_tensors="pt").input_features 
