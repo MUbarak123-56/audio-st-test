@@ -30,7 +30,7 @@ if audio_bytes:
     
     # Read the file sample rate and data using wavfile
     sample_rate, audio_data = wavfile.read(audio_bytes)
-    audio_input = {"array": np.frombuffer(audio_data, np.int16).flatten().astype(np.float32) / 32768.0 #audio_data[:,0].astype(np.float32)*(1/32768.0), 
+    audio_input = {"array": np.frombuffer(audio_data, np.int16).flatten().astype(np.float32) / 32768.0, #audio_data[:,0].astype(np.float32)*(1/32768.0), 
                    "sampling_rate": sample_rate}
     
     input_features = processor(audio_input["array"], sampling_rate=audio_input["sampling_rate"], return_tensors="pt").input_features 
