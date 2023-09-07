@@ -8,7 +8,7 @@ import openai
 import os
 
 def transcribe_with_whisper(uploaded_file):
-    response = openai.Whisper.transcribe(file=uploaded_file)
+    response = openai.Whisper.transcribe(file=uploaded_file, openai_api_key=openai_api_key)
     return response['transcription']
 
 #st.cache(allow_output_mutation=True)
