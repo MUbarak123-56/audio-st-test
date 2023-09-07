@@ -17,7 +17,7 @@ def model():
     model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
     return processor, model
 
-audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x", sample_rate = 16_000)
+audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x")
 
 #pipe = model()
 processor, model = model()
