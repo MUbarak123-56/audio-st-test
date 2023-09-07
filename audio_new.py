@@ -27,6 +27,7 @@ os.environ["OPENAI_API_KEY"] = openai_api_key
 audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="3x",)
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
+    st.write(new_audio)
     transcript = transcribe_with_whisper(new_audio)
     st.write("Transcription:", transcript)
     #input_features = processor(sample["array"], sampling_rate=sample["sampling_rate"], return_tensors="pt").input_features 
