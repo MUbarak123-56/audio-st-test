@@ -8,7 +8,7 @@ import openai
 import os
 
 def transcribe_with_whisper(audio_file):
-    response = openai.Audio.transcribe("whisper-1", audio_file, openai_api_key = openai_api_key)
+    response = openai.Audio.transcribe("whisper-1", audio_file, api_key = openai_api_key)
     return response['transcription']
 
 #st.cache(allow_output_mutation=True)
