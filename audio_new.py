@@ -7,8 +7,8 @@ from audio_recorder_streamlit import audio_recorder
 import openai
 import os
 
-def transcribe_with_whisper(uploaded_file):
-    response = openai.Audio.transcribe(file=uploaded_file)
+def transcribe_with_whisper(audio_file):
+    response = openai.Audio.transcribe("whisper-1", audio_file)
     return response['transcription']
 
 #st.cache(allow_output_mutation=True)
