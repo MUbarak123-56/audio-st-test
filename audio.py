@@ -32,11 +32,11 @@ if audio_bytes:
     #"sampling_rate": sample_rate}
     
     audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), #audio_data[:,0].astype(np.float32)*(1/32768.0), 
-                   "sampling_rate": sample_rate}
+                   "sampling_rate": 16_000}
     st.write(audio_input)
     st.write(pipe(audio_input)["text"])
     
-    input_features = processor(audio_input["array"], sampling_rate=16000, return_tensors="pt").input_features 
+    input_features = processor(audio_input["array"], sampling_rate=16_000, return_tensors="pt").input_features 
     
     predicted_ids = model.generate(input_features)
     # decode token ids to text
