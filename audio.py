@@ -8,18 +8,19 @@ from io import BytesIO
 #import librosa
 #import soundfile
 
-checkpoint = "openai/whisper-small.en"  
+checkpoint = "openai/whisper-large-v2"  
 
 @st.cache(allow_output_mutation=True)
 def model():
     pipe = pipeline("automatic-speech-recognition", model=checkpoint)
-    processor = WhisperProcessor.from_pretrained(checkpoint)
-    model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
-    return pipe, processor, model
+    #processor = WhisperProcessor.from_pretrained(checkpoint)
+    #model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
+    return pipe#, processor, model
 
 audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x", sample_rate = 16_000)
 
-pipe, processor, model = model()
+pipe = model()
+#, processor, model = model()
 
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
@@ -33,12 +34,12 @@ if audio_bytes:
     audio_input = {"array": np.frombuffer(audio_data, np.int16).flatten().astype(np.float32) / 32768.0, #audio_data[:,0].astype(np.float32)*(1/32768.0), 
                    "sampling_rate": sample_rate}
     
-    input_features = processor(audio_input["array"], sampling_rate=audio_input["sampling_rate"], return_tensors="pt").input_features 
+    #input_features = processor(audio_input["array"], sampling_rate=audio_input["sampling_rate"], return_tensors="pt").input_features 
     
-    predicted_ids = model.generate(input_features)
+    #predicted_ids = model.generate(input_features)
     # decode token ids to text
-    transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
-    st.write(transcription)
+    #transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
+    #st.write(transcription)
     
     st.write(audio_input)
     st.write(pipe(audio_input)["text"])
