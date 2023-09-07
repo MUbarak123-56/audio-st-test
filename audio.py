@@ -29,7 +29,7 @@ if audio_bytes:
     
     # Read the file sample rate and data using wavfile
     sample_rate, audio_data = wavfile.read(bytes_io)
-    audio_input = {"array": audio_data, "sampling_rate": 16000}
+    audio_input = {"array": audio_data[;,0].reshape(-1,1), "sampling_rate": 16000}
     #audio_input["array"] = np.array(float_data)
     #audio_input["sampling_rate"] = 16000
     #input_features = processor(sample["array"], sampling_rate=sample["sampling_rate"], return_tensors="pt").input_features 
@@ -37,5 +37,5 @@ if audio_bytes:
     #predicted_ids = model.generate(input_features)
     #transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
     st.write(audio_input)
-    st.write(pipe(audio_data)["text"])
+    st.write(pipe(audio_input)["text"])
     
