@@ -31,4 +31,5 @@ if audio_bytes:
     #predicted_ids = model.generate(input_features)
     #transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
     st.write(pipe(float_data)["text"])
+    st.write(float_data)
     #st.write(audio_bytes)
