@@ -22,7 +22,7 @@ def transcribe_with_whisper(uploaded_file):
 
 #processor, model = model()
 st.title("Whisper ASR with Streamlit")
-openai_api_key = st.text_input('OpenAI API Key', type='password', disabled=not (uploaded_file and query_text))
+openai_api_key = st.text_input('OpenAI API Key', type='password')
 os.environ["OPENAI_API_KEY"] = openai_api_key
 audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="3x",)
 if audio_bytes:
