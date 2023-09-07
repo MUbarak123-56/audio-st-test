@@ -27,7 +27,7 @@ if audio_bytes:
     data_s16 = np.frombuffer(audio_bytes, dtype=np.int16, count=len(audio_bytes)//2, offset=0)
     float_data = data_s16 * 0.5**15
     audio_input = {}
-    audio_input["audio"] = np.array(float_data)
+    audio_input["array"] = np.array(float_data)
     audio_input["sampling_rate"] = 16000
     #input_features = processor(sample["array"], sampling_rate=sample["sampling_rate"], return_tensors="pt").input_features 
     # generate token ids
