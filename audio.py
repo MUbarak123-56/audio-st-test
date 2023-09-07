@@ -2,6 +2,7 @@ import streamlit as st
 from transformers import pipeline
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
 from audio_recorder_streamlit import audio_recorder
+import numpy as np
 #import librosa
 #import soundfile
 
@@ -22,9 +23,10 @@ pipe = model()
 
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
+    audio_np = np.array(new_audio)
     #input_features = processor(sample["array"], sampling_rate=sample["sampling_rate"], return_tensors="pt").input_features 
     # generate token ids
     #predicted_ids = model.generate(input_features)
     #transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
-    st.write(pipe(new_audio)["text"])
+    st.write(pipe(audio_np)["text"])
     #st.write(audio_bytes)
