@@ -24,9 +24,6 @@ processor, model = model()
 
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
-    #audio_np = np.array(new_audio)
-    #data_s16 = np.frombuffer(audio_bytes, dtype=np.int16) #count=len(audio_bytes)//2, offset=0)
-    #float_data = data_s16 * 0.5**15
     bytes_io = BytesIO(audio_bytes)
     
     # Read the file sample rate and data using wavfile
