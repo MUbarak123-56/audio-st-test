@@ -18,7 +18,7 @@ if openai_api_key.startswith('sk-'):
   st.header('Output')
 
 
-  audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x", sample_rate=16000)
+  audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x")
 
   if audio_bytes:
       new_audio = st.audio(audio_bytes, format="audio/wav")
@@ -27,7 +27,7 @@ if openai_api_key.startswith('sk-'):
       # Read the file sample rate and data using wavfile
       sample_rate, audio_data = wavfile.read(bytes_io)
       audio_input = {"array": np.frombuffer(audio_data, np.int16).flatten().astype(np.float32) / 32768.0, #audio_data[:,0].astype(np.float32)*(1/32768.0), 
-                   "sampling_rate": sample_rate}
+                   "sampling_rate": 16000}
     
       transcription = openai.Audio.transcribe("whisper-1", audio_input)
 
