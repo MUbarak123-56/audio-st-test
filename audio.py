@@ -21,7 +21,7 @@ pipe = model()
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
     #audio_np = np.array(new_audio)
-    data_s16 = np.frombuffer(audio_bytes, dtype=np.int16, count=len(audio_bytes)//2, offset=0)
+    data_s16 = np.frombuffer(audio_bytes, dtype=np.int16) #count=len(audio_bytes)//2, offset=0)
     float_data = data_s16 * 0.5**15
     audio_input = {}
     audio_input["array"] = np.array(float_data)
