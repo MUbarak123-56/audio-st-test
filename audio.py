@@ -15,12 +15,12 @@ def model():
     pipe = pipeline("automatic-speech-recognition", model=checkpoint)
     processor = WhisperProcessor.from_pretrained(checkpoint)
     model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
-    return pipe, processor, model
+    return pipe#, processor, model
 
 audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x", sample_rate = 16_000)
 
-#pipe = model()
-pipe, processor, model = model()
+pipe = model()
+#pipe, processor, model = model()
 
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
@@ -36,13 +36,13 @@ if audio_bytes:
     st.write(audio_input)
     st.write(pipe(audio_input)["text"])
     
-    input_features = processor(audio_input["array"], sampling_rate=16000, return_tensors="pt").input_features 
+    #input_features = processor(audio_input["array"], sampling_rate=16000, return_tensors="pt").input_features 
     
-    predicted_ids = model.generate(input_features)
+    #predicted_ids = model.generate(input_features)
     # decode token ids to text
-    transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
+    #transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
     
     
-    st.write(transcription)
+    #st.write(transcription)
     
     
