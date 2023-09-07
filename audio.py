@@ -23,13 +23,12 @@ if audio_bytes:
     #audio_np = np.array(new_audio)
     data_s16 = np.frombuffer(audio_bytes, dtype=np.int16) #count=len(audio_bytes)//2, offset=0)
     float_data = data_s16 * 0.5**15
-    audio_input = {}
-    audio_input["array"] = np.array(float_data)
-    audio_input["sampling_rate"] = 16000
+    audio_input = {"array": np.array(float_data), "sampling_rate": 16000}
+    #audio_input["array"] = np.array(float_data)
+    #audio_input["sampling_rate"] = 16000
     #input_features = processor(sample["array"], sampling_rate=sample["sampling_rate"], return_tensors="pt").input_features 
     # generate token ids
     #predicted_ids = model.generate(input_features)
     #transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
     st.write(pipe(audio_input)["text"])
     st.write(audio_input)
-    #st.write(audio_bytes)
