@@ -21,15 +21,14 @@ def transcribe_with_whisper(uploaded_file):
 
 
 #processor, model = model()
-def main():
-    st.title("Whisper ASR with Streamlit")
-    openai_api_key = st.text_input('OpenAI API Key', type='password', disabled=not (uploaded_file and query_text))
-    os.environ["OPENAI_API_KEY"] = openai_api_key
-    audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="3x",)
-    if audio_bytes:
-        new_audio = st.audio(audio_bytes, format="audio/wav")
-        transcript = transcribe_with_whisper(new_audio)
-        st.write("Transcription:", transcript)
+st.title("Whisper ASR with Streamlit")
+openai_api_key = st.text_input('OpenAI API Key', type='password', disabled=not (uploaded_file and query_text))
+os.environ["OPENAI_API_KEY"] = openai_api_key
+audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="3x",)
+if audio_bytes:
+    new_audio = st.audio(audio_bytes, format="audio/wav")
+    transcript = transcribe_with_whisper(new_audio)
+    st.write("Transcription:", transcript)
     #input_features = processor(sample["array"], sampling_rate=sample["sampling_rate"], return_tensors="pt").input_features 
     # generate token ids
     #predicted_ids = model.generate(input_features)
@@ -37,6 +36,4 @@ def main():
     #st.write(pipe(audio_bytes)["text"])
     #st.write(audio_bytes)
 
-if __name__ == "__main__":
-    main()
 
