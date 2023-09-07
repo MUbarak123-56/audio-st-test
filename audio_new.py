@@ -15,9 +15,6 @@ openai_api_key = st.text_input('OpenAI API Key', type='password')
 if not openai_api_key.startswith('sk-'):
   st.warning('Please enter your OpenAI API key!', icon='⚠')
 if openai_api_key.startswith('sk-'):
-  st.header('Output')
-
-
   audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x")
 
   if audio_bytes:
