@@ -12,15 +12,15 @@ checkpoint = "openai/whisper-small.en"
 
 @st.cache(allow_output_mutation=True)
 def model():
-    #pipe = pipeline("automatic-speech-recognition", model=checkpoint)
+    pipe = pipeline("automatic-speech-recognition", model=checkpoint)
     processor = WhisperProcessor.from_pretrained(checkpoint)
     model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
-    return processor, model
+    return pipe, processor, model
 
-audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x")
+audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x", sample_rate=16000)
 
 #pipe = model()
-processor, model = model()
+pipe, processor, model = model()
 
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
@@ -32,6 +32,8 @@ if audio_bytes:
                    "sampling_rate": sample_rate}
     
     st.write(audio_input)
+    st.write(pipe(audio_input)["text"])
+    
     input_features = processor(audio_input["array"], sampling_rate=audio_input["sampling_rate"], return_tensors="pt").input_features 
     
     predicted_ids = model.generate(input_features)
@@ -40,5 +42,5 @@ if audio_bytes:
     
     
     st.write(transcription)
-    #st.write(pipe(audio_input)["text"])
+    
     
