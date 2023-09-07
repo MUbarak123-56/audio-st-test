@@ -7,9 +7,6 @@ from audio_recorder_streamlit import audio_recorder
 import openai
 import os
 
-OPENAI_API_KEY = "YOUR_OPENAI_API_KEY"
-os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
-
 def transcribe_with_whisper(uploaded_file):
     response = openai.Whisper.transcribe(file=uploaded_file)
     return response['transcription']
@@ -26,6 +23,8 @@ def transcribe_with_whisper(uploaded_file):
 #processor, model = model()
 def main():
     st.title("Whisper ASR with Streamlit")
+    openai_api_key = st.text_input('OpenAI API Key', type='password', disabled=not (uploaded_file and query_text))
+    os.environ["OPENAI_API_KEY"] = openai_api_key
     audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="3x",)
     if audio_bytes:
         st.audio(audio_bytes, format="audio/wav")
