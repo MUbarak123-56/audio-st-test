@@ -8,7 +8,7 @@ from io import BytesIO
 #import librosa
 #import soundfile
 
-checkpoint = "openai/whisper-large-v2"  
+checkpoint = "openai/whisper-medium.en"  
 
 @st.cache(allow_output_mutation=True)
 def model():
