@@ -22,8 +22,8 @@ audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral
 pipe = model()
 
 if audio_bytes:
-    new_audio = st.audio(audio_bytes, format="audio/wav")
-    audio_np = np.array(audio_bytes)
+    new_audio = st.audio(audio_bytes, format="audio/mp3")
+    audio_np = np.array(new_audio)
     #input_features = processor(sample["array"], sampling_rate=sample["sampling_rate"], return_tensors="pt").input_features 
     # generate token ids
     #predicted_ids = model.generate(input_features)
