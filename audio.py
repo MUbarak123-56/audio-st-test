@@ -23,7 +23,7 @@ pipe = model()
 
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
-    audio_np = np.array(new_audio)
+    audio_np = np.array(audio_bytes)
     #input_features = processor(sample["array"], sampling_rate=sample["sampling_rate"], return_tensors="pt").input_features 
     # generate token ids
     #predicted_ids = model.generate(input_features)
