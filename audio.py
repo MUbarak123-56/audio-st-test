@@ -18,13 +18,13 @@ def model():
 audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="3x",)
 
 #processor, model = model()
-
+pipe = model()
 
 if audio_bytes:
-    st.audio(audio_bytes, format="audio/wav")
+    new_audio = st.audio(audio_bytes, format="audio/wav")
     #input_features = processor(sample["array"], sampling_rate=sample["sampling_rate"], return_tensors="pt").input_features 
     # generate token ids
     #predicted_ids = model.generate(input_features)
     #transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
-    #st.write(pipe(audio_bytes)["text"])
-    st.write(audio_bytes)
+    st.write(pipe(new_audio)["text"])
+    #st.write(audio_bytes)
