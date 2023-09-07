@@ -36,5 +36,6 @@ if audio_bytes:
     # generate token ids
     #predicted_ids = model.generate(input_features)
     #transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
-    st.write(pipe(audio_input)["text"])
     st.write(audio_input)
+    st.write(pipe(audio_data)["text"])
+    
