@@ -4,6 +4,7 @@ from transformers import WhisperProcessor, WhisperForConditionalGeneration
 from audio_recorder_streamlit import audio_recorder
 import numpy as np
 from scipy.io import wavfile
+from io import BytesIO
 #import librosa
 #import soundfile
 
