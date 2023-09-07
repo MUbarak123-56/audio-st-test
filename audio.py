@@ -28,7 +28,7 @@ if audio_bytes:
     bytes_io = BytesIO(audio_bytes)
     
     # Read the file sample rate and data using wavfile
-    sample_rate, audio_data = wavfile.read(bytes_io)
+    sample_rate, audio_data = wavfile.read(audio_bytes)
     audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), "sampling_rate": 16000}
     #audio_input["array"] = np.array(float_data)
     #audio_input["sampling_rate"] = 16000
