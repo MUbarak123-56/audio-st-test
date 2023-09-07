@@ -4,3 +4,4 @@ transformers
 openai
 torch
 numpy
+scipy
