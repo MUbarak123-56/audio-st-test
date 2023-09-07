@@ -25,7 +25,7 @@ if audio_bytes:
     #audio_np = np.array(new_audio)
     data_s16 = np.frombuffer(audio_bytes, dtype=np.int16) #count=len(audio_bytes)//2, offset=0)
     float_data = data_s16 * 0.5**15
-    bytes_io = BytesIO(audio_bytes)
+    bytes_io = BytesIO(new_audio)
     
     # Read the file sample rate and data using wavfile
     sample_rate, audio_data = wavfile.read(bytes_io)
