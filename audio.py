@@ -10,7 +10,7 @@ from io import BytesIO
 
 checkpoint = "openai/whisper-small.en"  
 
-@st.cache_resource(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True)
 def model():
     #pipe = pipeline("automatic-speech-recognition", model=checkpoint)
     processor = WhisperProcessor.from_pretrained(checkpoint)
