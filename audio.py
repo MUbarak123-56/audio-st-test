@@ -11,10 +11,7 @@ checkpoint = "openai/whisper-small.en"
 @st.cache(allow_output_mutation=True)
 def model():
     pipe = pipeline("automatic-speech-recognition", model=checkpoint)
-    #processor = WhisperProcessor.from_pretrained(checkpoint)
-    #model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
-    #model.config.forced_decoder_ids = None
-    return pipe #processor, model
+    return pipe
 
 audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="3x",)
 
