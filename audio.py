@@ -47,7 +47,8 @@ def generate_response(input_query):
         {"role": "user", "content": input_query},
         #{"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
         #{"role": "user", "content": "Where was it played?"}
-    ]
+    ], 
+    openai_api_key = openai_api_key
   )
   return st.info(response)
 
