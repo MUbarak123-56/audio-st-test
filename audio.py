@@ -26,7 +26,7 @@ pipe, processor, model = model()
 
 openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
 if not openai_api_key.startswith('sk-'):
-        st.warning('Please enter your OpenAI API key!', icon='⚠')
+        st.sidebar.warning('Please enter your OpenAI API key!', icon='⚠')
 
 def generate_response(input_query):
   llm = OpenAI(temperature=0.1, openai_api_key=openai_api_key)
@@ -44,7 +44,7 @@ if audio_bytes:
     audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), #audio_data[:,0].astype(np.float32)*(1/32768.0), 
                    "sampling_rate": 16000}
     st.write(audio_input)
-    text = st.write(pipe(audio_input)["text"])
+    text = st.text(pipe(audio_input)["text"])
     
     generate_response(text)
     
