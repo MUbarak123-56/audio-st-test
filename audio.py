@@ -25,6 +25,8 @@ audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral
 pipe, processor, model = model()
 
 openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
+if not openai_api_key.startswith('sk-'):
+        st.warning('Please enter your OpenAI API key!', icon='⚠')
 
 def generate_response(input_query):
   llm = OpenAI(temperature=0.1, openai_api_key=openai_api_key)
@@ -42,23 +44,9 @@ if audio_bytes:
     audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), #audio_data[:,0].astype(np.float32)*(1/32768.0), 
                    "sampling_rate": 16000}
     st.write(audio_input)
-    st.write(pipe(audio_input)["text"])
+    text = st.write(pipe(audio_input)["text"])
     
-    #input_features = processor(audio_input["array"], sampling_rate=16_000, return_tensors="pt").input_features 
-    
-    #predicted_ids = model.generate(input_features)
-    # decode token ids to text
-    #transcription = processor.batch_decode(predicted_ids, skip_special_tokens=True)
-    
-    
-    #st.write(transcription)
-    text = pipe(audio_input)["text"]
-
-
-    if not openai_api_key.startswith('sk-'):
-        st.warning('Please enter your OpenAI API key!', icon='⚠')
-    else:
-        generate_response(text)
+    generate_response(text)
     
 
 
