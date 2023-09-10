@@ -65,7 +65,7 @@ if audio_bytes:
     st.write(audio_input)
     text = st.text(pipe(audio_input)["text"])
     
-    generate_response(text)
+    generate_response(str(pipe(audio_input)["text"]))
     
 
 
