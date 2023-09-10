@@ -64,6 +64,7 @@ if audio_bytes:
                    "sampling_rate": 16000}
     st.write(audio_input)
     text = str(pipe(audio_input)["text"])
+    st.write(text)
     
     generate_response(text)
     
