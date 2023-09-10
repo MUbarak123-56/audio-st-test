@@ -7,6 +7,8 @@ from scipy.io import wavfile
 from io import BytesIO
 from langchain.chat_models import ChatOpenAI
 from langchain.llms import OpenAI
+from langchain.prompts import PromptTemplate
+from langchain.chains import LLMChain
 #import librosa
 #import soundfile
 
@@ -29,8 +31,15 @@ if not openai_api_key.startswith('sk-'):
         st.sidebar.warning('Please enter your OpenAI API key!', icon='⚠')
 
 def generate_response(input_query):
-  llm = OpenAI(temperature=0.1, openai_api_key=openai_api_key)
-  return st.info(llm(input_query))
+  llm = OpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
+  #llm2 = ChatOpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
+  prompt = PromptTemplate(
+    input_variables=[input_query],
+    template=input_query,
+  )
+    
+  chain = LLMChain(llm=llm, prompt=prompt)
+  return st.info(chain.run(input_query))
 
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
