@@ -30,7 +30,7 @@ pipe, processor, model = model()
 openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
 if not openai_api_key.startswith('sk-'):
         st.sidebar.warning('Please enter your OpenAI API key!', icon='⚠')
-
+openai.api_key = openai_api_key
 def generate_response(input_query):
   #llm = OpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
   #llm2 = ChatOpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
@@ -47,8 +47,7 @@ def generate_response(input_query):
         {"role": "user", "content": input_query},
         #{"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
         #{"role": "user", "content": "Where was it played?"}
-    ], 
-    openai_api_key = openai_api_key
+    ]
   )
   return st.info(response)
 
