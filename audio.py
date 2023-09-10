@@ -5,6 +5,7 @@ from audio_recorder_streamlit import audio_recorder
 import numpy as np
 from scipy.io import wavfile
 from io import BytesIO
+from langchain.chat_models import ChatOpenAI
 #import librosa
 #import soundfile
 
@@ -44,5 +45,9 @@ if audio_bytes:
     
     
     #st.write(transcription)
-    
-    
+
+def generate_response(input_query):
+  llm = ChatOpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
+  llm(input_query)
+
+st.text(generate_response(pipe(audio_input)["text"]))
