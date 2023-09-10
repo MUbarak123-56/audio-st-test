@@ -49,5 +49,12 @@ if audio_bytes:
 def generate_response(input_query):
   llm = ChatOpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
   llm(input_query)
+openai_api_key = st.text_input('OpenAI API Key', type='password', disabled=not (uploaded_file and query_text))
 
-st.text(generate_response(pipe(audio_input)["text"]))
+if not openai_api_key.startswith('sk-'):
+    st.warning('Please enter your OpenAI API key!', icon='⚠')
+else:
+    st.text(generate_response(pipe(audio_input)["text"]))
+    
+
+
