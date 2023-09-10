@@ -5,3 +5,5 @@ openai
 torch
 numpy
 scipy
+langchain
+tabulate
