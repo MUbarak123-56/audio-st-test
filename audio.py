@@ -6,6 +6,7 @@ import numpy as np
 from scipy.io import wavfile
 from io import BytesIO
 from langchain.chat_models import ChatOpenAI
+from langchain.llms import OpenAI
 #import librosa
 #import soundfile
 
@@ -49,13 +50,13 @@ if audio_bytes:
 openai_api_key = st.text_input('OpenAI API Key', type='password')
 
 def generate_response(input_query):
-  llm = ChatOpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
-  llm(input_query)
+  llm = OpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
+  return st.info(llm(input_query))
 
 if not openai_api_key.startswith('sk-'):
     st.warning('Please enter your OpenAI API key!', icon='⚠')
 else:
-    st.text(generate_response(pipe(audio_input)["text"]))
+    generate_response(pipe(audio_input)["text"])
     
 
 
