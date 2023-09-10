@@ -18,14 +18,14 @@ checkpoint = "openai/whisper-small.en"
 @st.cache_resource()
 def model():
     pipe = pipeline("automatic-speech-recognition", model=checkpoint)
-    processor = WhisperProcessor.from_pretrained(checkpoint)
-    model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
+    #processor = WhisperProcessor.from_pretrained(checkpoint)
+    #model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
     return pipe, processor, model
 
 audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x", sample_rate = 16000)
 
-#pipe = model()
-pipe, processor, model = model()
+pipe = model()
+#pipe, processor, model = model()
 
 openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
 if not openai_api_key.startswith('sk-'):
