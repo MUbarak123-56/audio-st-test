@@ -24,6 +24,12 @@ audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral
 #pipe = model()
 pipe, processor, model = model()
 
+openai_api_key = st.text_input('OpenAI API Key', type='password')
+
+def generate_response(input_query):
+  llm = OpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
+  return st.info(llm(input_query))
+
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
     bytes_io = BytesIO(audio_bytes)
@@ -46,17 +52,13 @@ if audio_bytes:
     
     
     #st.write(transcription)
+    text = st.text_area("New input:", pipe(audio_input)["text"])
 
-openai_api_key = st.text_input('OpenAI API Key', type='password')
 
-def generate_response(input_query):
-  llm = OpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
-  return st.info(llm(input_query))
-
-if not openai_api_key.startswith('sk-'):
-    st.warning('Please enter your OpenAI API key!', icon='⚠')
-else:
-    generate_response(pipe(audio_input)["text"])
+    if not openai_api_key.startswith('sk-'):
+        st.warning('Please enter your OpenAI API key!', icon='⚠')
+    else:
+        generate_response(text)
     
 
 
