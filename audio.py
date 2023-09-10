@@ -27,7 +27,7 @@ pipe, processor, model = model()
 openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
 
 def generate_response(input_query):
-  llm = OpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
+  llm = OpenAI(temperature=0.1, openai_api_key=openai_api_key)
   return st.info(llm(input_query))
 
 if audio_bytes:
