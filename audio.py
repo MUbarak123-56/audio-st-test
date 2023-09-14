@@ -13,7 +13,9 @@ import openai
 from transformers import SpeechT5Processor, SpeechT5HifiGan, SpeechT5ForTextToSpeech
 from datasets import load_dataset
 import torch
+from IPython.display import Audio
 
+Audio(speech, rate=16000)
 #import librosa
 #import soundfile
 
@@ -86,7 +88,7 @@ if audio_bytes:
     st.info(output)
 
     tts_output = np.array(tts(output))
-    st.audio(tts_output, sample_rate = 16000)
+    st.audio(tts_output, format ="audio/wav")
     
 
 
