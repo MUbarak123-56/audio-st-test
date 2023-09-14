@@ -9,3 +9,4 @@ langchain
 tabulate
 datasets[audio]
 sentencepiece
+IPython
