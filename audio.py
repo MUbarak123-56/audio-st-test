@@ -10,22 +10,34 @@ from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 import openai
+from transformers import SpeechT5Processor, SpeechT5HifiGan, SpeechT5ForTextToSpeech
+from datasets import load_dataset
+import torch
+
 #import librosa
 #import soundfile
 
-checkpoint = "openai/whisper-small.en"  
-
+checkpoint_stt = "openai/whisper-small.en"  
+checkpoint_tts = "microsoft/speecht5_tts"
+checkpoint_vocoder = "microsoft/speecht5_hifigan"
+dataset_tts = "Matthijs/cmu-arctic-xvectors"
 @st.cache_resource()
 def model():
-    pipe = pipeline("automatic-speech-recognition", model=checkpoint)
+    stt_model = pipeline("automatic-speech-recognition", model=checkpoint_stt)
+    processor = SpeechT5Processor.from_pretrained(checkpoint_tts)
+    tts_model = SpeechT5ForTextToSpeech.from_pretrained(checkpoint_tts)
+    vocoder = SpeechT5HifiGan.from_pretrained(checkpoint_vocoder)
+    embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
+    
     #processor = WhisperProcessor.from_pretrained(checkpoint)
     #model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
-    return pipe#, processor, model
+    
+    return stt_model, processor, vocoder, tts_model, embeddings_dataset
+
+stt_model, processor, vocoder, tts_model, embeddings_dataset = model()
+#pipe, processor, model = model()
 
 audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x", sample_rate = 16000)
-
-pipe = model()
-#pipe, processor, model = model()
 
 openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
 if not openai_api_key.startswith('sk-'):
@@ -52,8 +64,10 @@ def generate_response(input_query):
   return response["choices"][0]["message"]["content"]
 
 def tts(input):
-
-    return input
+    inputs = processor(text=input, return_tensors="pt")
+    speaker_embeddings = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
+    speech = tts_model.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder)
+    return speech
 
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
@@ -64,10 +78,14 @@ if audio_bytes:
     audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), 
                    "sampling_rate": 16000}
     st.write(audio_input)
-    text = str(pipe(audio_input)["text"])
+    text = str(stt_model(audio_input)["text"])
     st.write(text)
-    
-    st.info(generate_response(text))
+
+    output = generate_response(text)
+    st.info(output)
+
+    tts_output = tts(output)
+    st.audio(tts_output)
     
 
 
