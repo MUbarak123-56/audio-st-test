@@ -85,7 +85,7 @@ if audio_bytes:
     output = generate_response(text)
     st.info(output)
 
-    tts_output = tts(output)
+    tts_output = np.array(tts(output))
     st.audio(tts_output)
     
 
