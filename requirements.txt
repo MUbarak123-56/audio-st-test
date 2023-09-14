@@ -8,3 +8,4 @@ scipy
 langchain
 tabulate
 datasets[audio]
+sentencepiece
