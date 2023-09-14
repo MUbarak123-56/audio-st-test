@@ -21,13 +21,14 @@ checkpoint_stt = "openai/whisper-small.en"
 checkpoint_tts = "microsoft/speecht5_tts"
 checkpoint_vocoder = "microsoft/speecht5_hifigan"
 dataset_tts = "Matthijs/cmu-arctic-xvectors"
+
 @st.cache_resource()
 def model():
     stt_model = pipeline("automatic-speech-recognition", model=checkpoint_stt)
     processor = SpeechT5Processor.from_pretrained(checkpoint_tts)
     tts_model = SpeechT5ForTextToSpeech.from_pretrained(checkpoint_tts)
     vocoder = SpeechT5HifiGan.from_pretrained(checkpoint_vocoder)
-    embeddings_dataset = load_dataset("Matthijs/cmu-arctic-xvectors", split="validation")
+    embeddings_dataset = load_dataset(dataset_tts, split="validation")
     
     #processor = WhisperProcessor.from_pretrained(checkpoint)
     #model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
