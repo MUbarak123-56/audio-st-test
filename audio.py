@@ -49,7 +49,7 @@ def generate_response(input_query):
         #{"role": "user", "content": "Where was it played?"}
     ]
   )
-  return st.info(response)
+  return response["choices"]
 
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
@@ -66,7 +66,7 @@ if audio_bytes:
     text = str(pipe(audio_input)["text"])
     st.write(text)
     
-    generate_response(text)
+    st.info(generate_response(text))
     
 
 
