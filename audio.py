@@ -98,7 +98,7 @@ if audio_bytes:
     tts_output = np.array(tts(output))
     tts_output_bytes = tts_output.tobytes()
 
-    audio_base64 = base64.b64encode(tts_output_bytes).decode('utf-8')
+    audio_base64 = base64.b64encode(tts_output).decode('utf-8')
     audio_tag = f'<audio controls autoplay="true" src="data:audio/wav;base64,{audio_base64}">'
     st.markdown(audio_tag, unsafe_allow_html=True)
     #st.audio(tts_output, format='audio/wav', sample_rate=16000)
