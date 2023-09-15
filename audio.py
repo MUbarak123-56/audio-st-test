@@ -25,21 +25,26 @@ checkpoint_vocoder = "microsoft/speecht5_hifigan"
 dataset_tts = "Matthijs/cmu-arctic-xvectors"
 
 @st.cache_resource()
-def model():
+def models():
     stt_model = pipeline("automatic-speech-recognition", model=checkpoint_stt)
     processor = SpeechT5Processor.from_pretrained(checkpoint_tts)
     tts_model = SpeechT5ForTextToSpeech.from_pretrained(checkpoint_tts)
     vocoder = SpeechT5HifiGan.from_pretrained(checkpoint_vocoder)
-    embeddings_dataset = load_dataset(dataset_tts, split="validation")
-    speaker_embeddings = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
-    
+
     #processor = WhisperProcessor.from_pretrained(checkpoint)
     #model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
     
-    return stt_model, processor, vocoder, tts_model, speaker_embeddings
+    return stt_model, processor, vocoder, tts_model
 
-stt_model, processor, vocoder, tts_model, speaker_embeddings = model()
-#pipe, processor, model = model()
+stt_model, processor, vocoder, tts_model = models()
+
+@st.cache_data()
+def speech_embed():
+    embeddings_dataset = load_dataset(dataset_tts, split="validation")
+    speaker_embeddings = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
+    return speaker_embeddings
+
+speaker_embeddings = speech_embed()
 
 audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x", sample_rate = 16000)
 
