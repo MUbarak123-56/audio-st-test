@@ -31,13 +31,14 @@ def model():
     tts_model = SpeechT5ForTextToSpeech.from_pretrained(checkpoint_tts)
     vocoder = SpeechT5HifiGan.from_pretrained(checkpoint_vocoder)
     embeddings_dataset = load_dataset(dataset_tts, split="validation")
+    speaker_embeddings = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
     
     #processor = WhisperProcessor.from_pretrained(checkpoint)
     #model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
     
-    return stt_model, processor, vocoder, tts_model, embeddings_dataset
+    return stt_model, processor, vocoder, tts_model, speaker_embeddings
 
-stt_model, processor, vocoder, tts_model, embeddings_dataset = model()
+stt_model, processor, vocoder, tts_model, speaker_embeddings = model()
 #pipe, processor, model = model()
 
 audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="user", icon_size="1x", sample_rate = 16000)
@@ -68,8 +69,8 @@ def generate_response(input_query):
 
 def tts(input):
     inputs = processor(text=input, return_tensors="pt")
-    speaker_embeddings = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
     speech = tts_model.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder)
+    
     return speech
 
 if audio_bytes:
