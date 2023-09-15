@@ -80,6 +80,15 @@ def tts(input):
     
     return speech
 
+def autoplay_audio(data):
+    b64 = base64.b64encode(data).decode()
+    md = f"""
+        <audio controls autoplay="true">
+        <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
+        </audio>
+        """
+    return st.markdown(md, unsafe_allow_html=True,)
+    
 if audio_bytes:
     new_audio = st.audio(audio_bytes, format="audio/wav")
     bytes_io = BytesIO(audio_bytes)
@@ -96,11 +105,12 @@ if audio_bytes:
     st.info(output)
 
     tts_output = np.array(tts(output))
-    tts_output_bytes = tts_output.tobytes()
+    #tts_output_bytes = tts_output.tobytes()
+    autoplay_audio(tts_output)
 
-    audio_base64 = base64.b64encode(tts_output).decode('utf-8')
-    audio_tag = f'<audio controls autoplay="true" src="data:audio/wav;base64,{audio_base64}">'
-    st.markdown(audio_tag, unsafe_allow_html=True)
+    #audio_base64 = base64.b64encode(tts_output).decode('utf-8')
+    #audio_tag = f'<audio controls autoplay="true" src="data:audio/wav;base64,{audio_base64}">'
+    #st.markdown(audio_tag, unsafe_allow_html=True)
     #st.audio(tts_output, format='audio/wav', sample_rate=16000)
     #Audio(tts_output, rate = 16000)
 
