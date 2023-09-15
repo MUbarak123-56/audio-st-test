@@ -90,5 +90,5 @@ if audio_bytes:
 
     tts_output = np.array(tts(output))
     #st.audio(tts_output, sample_rate = 16000, format ="audio/wav")
-    Audio(tts_output, sample_rate = 16000)
+    Audio(tts_output, rate = 16000)
 
