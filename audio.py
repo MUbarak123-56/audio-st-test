@@ -89,7 +89,7 @@ if audio_bytes:
     audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), 
                    "sampling_rate": 16000}
     st.write(audio_input)
-    text = str(stt_model(audio_input, max_new_tokens=256,chunk_length_s=30,batch_size=8)["text"])
+    text = str(stt_model(audio_input)["text"])
     st.write(text)
 
     output = generate_response(text)
