@@ -11,3 +11,4 @@ datasets[audio]
 sentencepiece
 IPython
 gradio
+sounddevice
