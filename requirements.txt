@@ -10,3 +10,4 @@ tabulate
 datasets[audio]
 sentencepiece
 IPython
+gradio
