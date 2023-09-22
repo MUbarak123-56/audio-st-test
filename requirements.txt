@@ -10,6 +10,3 @@ tabulate
 datasets[audio]
 sentencepiece
 IPython
-gradio
-sounddevice
-libportaudio2
