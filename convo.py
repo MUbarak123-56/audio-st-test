@@ -81,6 +81,9 @@ message_output(st.session_state.messages[1])
 if prompt := st.chat_input():
     new_message = {"role": "user", "content": prompt}
     st.session_state.messages.append(new_message)
+    with st.chat_message("user"):
+        st.write(prompt)
+
 
 for message in st.session_state.messages[2:]:
     message_output(message)
