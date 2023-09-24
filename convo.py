@@ -69,13 +69,12 @@ def message_output(message):
 
 message_output(st.session_state.messages[1])
 
-for message in st.session_state.messages[2:]:
-    message_output(message)
-    
 if prompt := st.chat_input():
     new_message = {"role": "user", "content": prompt}
     st.session_state.messages.append(new_message)
 
+for message in st.session_state.messages[2:]:
+    message_output(message)
 
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
