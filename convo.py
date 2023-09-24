@@ -56,7 +56,7 @@ def generate_response(input_query):
   #chain = LLMChain(llm=llm, prompt=prompt)
   response = openai.ChatCompletion.create(
     model=llm,
-    messages=st.session_state.messages
+    messages=st.session_state.messages.append({"role":"user", "content": input_query})
   )
   return response
 
