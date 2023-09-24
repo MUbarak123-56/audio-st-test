@@ -52,7 +52,8 @@ def generate_response(input_query):
   return response["choices"][0]["message"]["content"]
 
 if "messages" not in st.session_state.keys():
-    initial_agent = {"role":"system", "content":"You are an helpful assistant"}
+    initial_system = {"role": "system", "content": "You are a helpful assistant."}
+    st.session_state.messages.append(initial_system)
     initial_message = {"role": "assistant", "content": "How may I assist you today?"}
     st.session_state.messages.append(initial_message)
     with st.chat_message(initial_message["role"]):
