@@ -114,7 +114,7 @@ def autoplay_audio(data):
  #   sample_rate, audio_data = wavfile.read(bytes_io)
     
  #   audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), 
-                   "sampling_rate": 16000}
+                   #"sampling_rate": 16000}
  #   st.write(audio_input)
  #   text = str(stt_model(audio_input)["text"])
  #   st.write(text)
