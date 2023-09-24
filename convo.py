@@ -44,10 +44,10 @@ def clear_chat_history():
   
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
-def generate_response(input_query):
+def generate_response():
   #chain = LLMChain(llm=llm, prompt=prompt)
   use_messages = st.session_state.messages
-  use_messages.append({"role":"user", "content": input_query})
+  #use_messages.append({"role":"user", "content": input_query})
   response = openai.ChatCompletion.create(
     model=llm,
     messages=use_messages,
@@ -89,7 +89,7 @@ for message in st.session_state.messages[2:]:
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            response = generate_response(prompt)
+            response = generate_response()
             placeholder = st.empty()
             full_response = ''
             for item in response:
