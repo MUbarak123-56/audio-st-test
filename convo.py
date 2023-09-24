@@ -41,8 +41,6 @@ def clear_chat_history():
     st.session_state.messages.append(initial_system)
     initial_message = {"role": "assistant", "content": "How may I assist you today?"}
     st.session_state.messages.append(initial_message)
-    with st.chat_message(initial_message["role"]):
-        st.write(initial_message["content"])
   
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
@@ -62,27 +60,31 @@ if "messages" not in st.session_state.keys():
     st.session_state.messages.append(initial_system)
     initial_message = {"role": "assistant", "content": "How may I assist you today?"}
     st.session_state.messages.append(initial_message)
-    with st.chat_message(initial_message["role"]):
-        st.write(initial_message["content"])
 
-for message in st.session_state.messages:
+def message_output(message):
     if message["role"] != "system":
         with st.chat_message(message["role"]):
             st.write(message["content"])
 
-if prompt := st.chat_input():
-    st.session_state.messages.append({"role": "user", "content": prompt})
+message_output(initial_message)
 
-if st.session_state.messages[-1]["role"] != "assistant":
-    with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
-            response = generate_response(prompt)
-            placeholder = st.empty()
-            full_response = ''
-            for item in response:
-                full_response += item
+while True:
+    if prompt := st.chat_input():
+        new_message = {"role": "user", "content": prompt}
+        st.session_state.messages.append(new_message)
+        message_output(new_message)
+
+    if st.session_state.messages[-1]["role"] != "assistant":
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking..."):
+                response = generate_response(prompt)
+                placeholder = st.empty()
+                full_response = ''
+                for item in response:
+                    full_response += item
+                    placeholder.markdown(full_response)
                 placeholder.markdown(full_response)
-            placeholder.markdown(full_response)
-    message = {"role": "assistant", "content": full_response}
-    st.session_state.messages.append(message)
+        message = {"role": "assistant", "content": full_response}
+        st.write(full_response)
+        st.session_state.messages.append(message)
 
