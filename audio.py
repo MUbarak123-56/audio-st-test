@@ -17,9 +17,8 @@ from IPython.display import Audio
 import os
 import base64
 
-#Audio(speech, rate=16000)
-#import librosa
-#import soundfile
+
+st.set_page_config(layout='wide', page_title = "Audio ChatGPT")
 
 checkpoint_stt = "openai/whisper-small.en"  
 checkpoint_tts = "microsoft/speecht5_tts"
@@ -43,26 +42,43 @@ stt_model, processor, vocoder, tts_model = models()
 @st.cache_data()
 def speech_embed():
     embeddings_dataset = load_dataset(dataset_tts, split="validation")
-    speaker_embeddings = torch.tensor(embeddings_dataset[7306]["xvector"]).unsqueeze(0)
+    speaker_embeddings = torch.tensor(embeddings_dataset[7301]["xvector"]).unsqueeze(0)
     return speaker_embeddings
 
 speaker_embeddings = speech_embed()
 
-audio_bytes = audio_recorder(text="Click Me", recording_color="#e8b62c", neutral_color="#6aa36f", icon_name="microphone", icon_size="1x", sample_rate = 16000)
-
-openai_api_key = st.sidebar.text_input('OpenAI API Key', type='password')
-if not openai_api_key.startswith('sk-'):
-        st.sidebar.warning('Please enter your OpenAI API key!', icon='⚠')
-openai.api_key = openai_api_key
-def generate_response(input_query):
-  #llm = OpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
-  #llm2 = ChatOpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
-  #prompt = PromptTemplate(
-  #  input_variables=[input_query],
-  #  template=input_query,
-  #)
+with st.sidebar:
+    st.title('GPT Personal Chatbot')
+    if 'OPENAI_API_TOKEN' in st.secrets:
+        st.success('API key already provided!', icon='✅')
+        openai_api_key = st.secrets['OPENAI_API_TOKEN']
+    else:
+        openai_api_key = st.text_input('Enter OpenAI API token:', type='password')
+        if not (openai_api_key).startswith('sk-') or len(openai_api_key) != 51:
+            st.warning('Please enter your credentials!', icon='⚠️')
+        else:
+            st.success('Proceed to entering your prompt message!', icon='👉')
     
-  #chain = LLMChain(llm=llm, prompt=prompt)
+    audio_bytes = audio_recorder(text="Click To Record", 
+                                 recording_color="#e8b62c", 
+                                 neutral_color="#6aa36f", 
+                                 icon_name="microphone", 
+                                 icon_size="6x", 
+                                 sample_rate = 16000)
+
+    st.subheader('Models')
+    selected_model = st.sidebar.selectbox('Choose a GPT model', ['GPT 3.5', 'GPT 4'], key='selected_model')
+    if selected_model == 'GPT 3.5':
+        llm = 'gpt-3.5-turbo'
+    elif selected_model == 'GPT 4':
+        llm = 'gpt-4'
+    temp = st.sidebar.number_input('temperature', min_value=0.01, max_value=4.0, value=0.1, step=0.01)
+    top_percent = st.sidebar.number_input('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
+
+openai.api_key = openai_api_key
+
+def generate_response(input_query):
+
   response = openai.ChatCompletion.create(
     model="gpt-4",
     messages=[
@@ -105,12 +121,4 @@ if audio_bytes:
     st.info(output)
 
     tts_output = np.array(tts(output))
-    #tts_output_bytes = tts_output.tobytes()
-   # autoplay_audio(tts_output)
-
-    #audio_base64 = base64.b64encode(tts_output).decode('utf-8')
-    #audio_tag = f'<audio controls autoplay="true" src="data:audio/wav;base64,{audio_base64}">'
-    #st.markdown(audio_tag, unsafe_allow_html=True)
     st.audio(tts_output, format='audio/wav', sample_rate=16000)
-    #Audio(tts_output, rate = 16000)
-
