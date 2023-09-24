@@ -54,9 +54,10 @@ if prompt := st.chat_input():
 
 def generate_response(input_query):
   #chain = LLMChain(llm=llm, prompt=prompt)
+  st.session_state.messages.append({"role":"user", "content": input_query})
   response = openai.ChatCompletion.create(
     model=llm,
-    messages=st.session_state.messages.append({"role":"user", "content": input_query})
+    messages=st.session_state.messages
   )
   return response
 
