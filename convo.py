@@ -30,8 +30,8 @@ with st.sidebar:
         llm = 'gpt-3.5-turbo'
     elif selected_model == 'GPT 4':
         llm = 'gpt-4'
-    temp = st.sidebar.number_input('temperature', min_value=0.02, max_value=4.0, value=0.1, step=0.01)
-    top_percent = st.sidebar.number_input('top_p', min_value=0.02, max_value=1.0, value=0.9, step=0.01)
+    temp = st.sidebar.number_input('temperature', min_value=0.01, max_value=4.0, value=0.1, step=0.01)
+    top_percent = st.sidebar.number_input('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
     
 openai.api_key = openai_api_key
   
