@@ -32,26 +32,6 @@ with st.sidebar:
         llm = 'gpt-4'
 
 openai.api_key = openai_api_key
-
-def generate_response(input_query):
-  #llm = OpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
-  #llm2 = ChatOpenAI(model_name='gpt-4', temperature=0.1, openai_api_key=openai_api_key)
-  #prompt = PromptTemplate(
-  #  input_variables=[input_query],
-  #  template=input_query,
-  #)
-    
-  #chain = LLMChain(llm=llm, prompt=prompt)
-  response = openai.ChatCompletion.create(
-    model=llm,
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": input_query},
-        #{"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-        #{"role": "user", "content": "Where was it played?"}
-    ]
-  )
-  return response["choices"][0]["message"]["content"]
   
 def clear_chat_history():
     st.session_state.messages = [{"role": "assistant", "content": "How may I assist you today?"}]
@@ -66,3 +46,21 @@ if "messages" not in st.session_state.keys():
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
+        
+if prompt := st.chat_input():
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.write(prompt)
+        
+def generate_response(input_query):
+  #chain = LLMChain(llm=llm, prompt=prompt)
+  response = openai.ChatCompletion.create(
+    model=llm,
+    messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        #{"role": "user", "content": input_query},
+        #{"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
+        #{"role": "user", "content": "Where was it played?"}
+    ]
+  )
+  return response["choices"][0]["message"]["content"]
