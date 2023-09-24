@@ -52,9 +52,10 @@ def generate_response(input_query):
   return response["choices"][0]["message"]["content"]
 
 if "messages" not in st.session_state.keys():
-    st.session_state.messages = [{"role": "assistant", "content": "How may I assist you today?"}]
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+    initial_message = {"role": "assistant", "content": "How may I assist you today?"}
+    st.session_state.messages.append(initial_message)
+    with st.chat_message(initial_message["role"]):
+        st.write(initial_message["content"])
 
 if prompt := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": prompt})
