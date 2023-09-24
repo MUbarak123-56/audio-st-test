@@ -72,10 +72,9 @@ if prompt := st.chat_input():
     new_message = {"role": "user", "content": prompt}
     st.session_state.messages.append(new_message)
 
-if st.session_state.messages[-1]["role"] == "user":
-    message_output(st.session_state.messages[-1])
-
-    if st.session_state.messages[-1]["role"] != "assistant":
+for message in st.session_state.messages:
+    if message["role"] != "assistant":
+        message_output(message[-1])
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
                 response = generate_response(prompt)
@@ -85,5 +84,5 @@ if st.session_state.messages[-1]["role"] == "user":
                     full_response += item
                     placeholder.markdown(full_response)
                 placeholder.markdown(full_response)
-        message = {"role": "assistant", "content": full_response}
-        st.session_state.messages.append(message)
+        new_message = {"role": "assistant", "content": full_response}
+        st.session_state.messages.append(new_message)
