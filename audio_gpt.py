@@ -172,11 +172,11 @@ def message_output(message):
 message_output(st.session_state.messages[1])
 
 
-if prompt := st.chat_input("Say something"):
+if prompt := st.chat_input("Text Me"):
     new_message = {"role": "user", "content": prompt}
     st.session_state.messages.append(new_message)
 elif audio_bytes:
-    new_audio = st.audio(audio_bytes, format="audio/wav")
+    #new_audio = st.audio(audio_bytes, format="audio/wav")
     bytes_io = BytesIO(audio_bytes)
     
     sample_rate, audio_data = wavfile.read(bytes_io)
@@ -186,8 +186,9 @@ elif audio_bytes:
     text = str(stt_model(audio_input)["text"])
     with st.chat_message("user"):
         st.write(text)
-    new_message = {"role": "user", "content": st.chat_input(text)}
+    new_message = {"role": "user", "content": text}
     st.session_state.messages.append(new_message)
+    audio_bytes = False
      
 #input()
 
