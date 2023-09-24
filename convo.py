@@ -60,7 +60,7 @@ def generate_response(input_query):
    # temperature = 0.9,
     #max_tokens = 200,
   )
-  return response
+  return response["choices"][0]["message"]["content"]
 
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
