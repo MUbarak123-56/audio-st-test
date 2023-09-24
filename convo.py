@@ -30,8 +30,8 @@ with st.sidebar:
             st.warning('Please enter your credentials!', icon='⚠️')
         else:
             st.success('Proceed to entering your prompt message!', icon='👉')
-
- st.subheader('Models')
+    
+    st.subheader('Models')
     selected_model = st.sidebar.selectbox('Choose a GPT model', ['GPT 3.5', 'GPT 4'], key='selected_model')
     if selected_model == 'GPT 3.5':
         llm = 'gpt-3.5-turbo'
