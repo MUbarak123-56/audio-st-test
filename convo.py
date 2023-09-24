@@ -39,8 +39,7 @@ def clear_chat_history():
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 if "messages" not in st.session_state.keys():
-    initial_message = {"role": "assistant", "content": "How may I assist you today?"}
-    st.session_state.messages.append(initial_message)
+    st.session_state.messages = [{"role": "assistant", "content": "How may I assist you today?"}]
 
 # Display or clear chat messages
 for message in st.session_state.messages:
