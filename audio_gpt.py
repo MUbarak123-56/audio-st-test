@@ -186,8 +186,8 @@ elif input_format == "audio":
         audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), 
                    "sampling_rate": 16000}
         text = str(stt_model(audio_input)["text"])
-        with st.chat_message("user"):
-            st.write(text)
+        #with st.chat_message("user"):
+        #    st.write(text)
         new_message = {"role": "user", "content": text}
         st.session_state.messages.append(new_message)
      
