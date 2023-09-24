@@ -63,9 +63,9 @@ if "messages" not in st.session_state.keys():
     st.session_state.messages.append(initial_message)
 
 def message_output(message):
-    #if message["role"] == "user":
-        #with st.chat_message(message["role"]):
-         #   st.write(message["content"])
+    if message["role"] == "user":
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
     if message["role"] == "assistant":
         with st.chat_message("assistant"):
             use_response = message["content"]
