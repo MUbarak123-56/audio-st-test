@@ -36,6 +36,7 @@ with st.sidebar:
 openai.api_key = openai_api_key
   
 def clear_chat_history():
+    st.session_state.messages = []
     initial_system = {"role": "system", "content": "You are a helpful assistant."}
     st.session_state.messages.append(initial_system)
     initial_message = {"role": "assistant", "content": "How may I assist you today?"}
@@ -65,8 +66,9 @@ if "messages" not in st.session_state.keys():
         st.write(initial_message["content"])
 
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+    if message["role"] != "system":
+        with st.chat_message(message["role"]):
+            st.write(message["content"])
 
 if prompt := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": prompt})
