@@ -67,6 +67,7 @@ def message_output(message):
         with st.chat_message(message["role"]):
             st.write(message["content"])
     elif message["role"] == "assistant":
+        with st.chat_message("assistant"):
             use_response = message["content"]
             placeholder = st.empty()
             full_response = ''
