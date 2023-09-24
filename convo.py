@@ -51,16 +51,24 @@ if prompt := st.chat_input():
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.write(prompt)
-        
+
 def generate_response(input_query):
   #chain = LLMChain(llm=llm, prompt=prompt)
   response = openai.ChatCompletion.create(
     model=llm,
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        #{"role": "user", "content": input_query},
-        #{"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-        #{"role": "user", "content": "Where was it played?"}
-    ]
+    messages=st.session_state.messages
   )
-  return response["choices"][0]["message"]["content"]
+  return response
+
+if st.session_state.messages[-1]["role"] != "assistant":
+    with st.chat_message("assistant"):
+        with st.spinner("Thinking..."):
+            response = generate_response(prompt)
+            placeholder = st.empty()
+            full_response = ''
+            for item in response:
+                full_response += item
+                placeholder.markdown(full_response)
+            placeholder.markdown(full_response)
+    message = {"role": "assistant", "content": full_response}
+    st.session_state.messages.append(message)
