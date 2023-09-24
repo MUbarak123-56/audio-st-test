@@ -171,8 +171,8 @@ def message_output(message):
 
 message_output(st.session_state.messages[1])
 
-
-if prompt := st.chat_input("I want sparta"):
+prompt = "I want Sparta"
+if prompt := st.chat_input():
     new_message = {"role": "user", "content": prompt}
     st.session_state.messages.append(new_message)
 #elif audio_bytes:
