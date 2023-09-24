@@ -80,13 +80,15 @@ openai.api_key = openai_api_key
 def generate_response(input_query):
 
   response = openai.ChatCompletion.create(
-    model="gpt-4",
+    model=llm,
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": input_query},
         #{"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
         #{"role": "user", "content": "Where was it played?"}
-    ]
+    ],
+    temperature = temp,
+    top_p = top_percent
   )
   return response["choices"][0]["message"]["content"]
 
