@@ -56,6 +56,7 @@ def generate_response(input_query):
   return response["choices"][0]["message"]["content"]
 
 if "messages" not in st.session_state.keys():
+    st.session_state.messages = []
     initial_system = {"role": "system", "content": "You are a helpful assistant."}
     st.session_state.messages.append(initial_system)
     initial_message = {"role": "assistant", "content": "How may I assist you today?"}
