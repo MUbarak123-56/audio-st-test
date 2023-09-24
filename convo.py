@@ -30,7 +30,9 @@ with st.sidebar:
         llm = 'gpt-3.5-turbo'
     elif selected_model == 'GPT 4':
         llm = 'gpt-4'
-
+    temp = st.sidebar.slider('temperature', min_value=0.02, max_value=4.0, value=0.1, step=0.01)
+    top_percent = st.sidebar.slider('top_p', min_value=0.02, max_value=1.0, value=0.9, step=0.01)
+    
 openai.api_key = openai_api_key
   
 def clear_chat_history():
@@ -57,9 +59,8 @@ def generate_response(input_query):
   response = openai.ChatCompletion.create(
     model=llm,
     messages=st.session_state.messages,
-    temperature = 0.9,
-    top_p = 0.1, 
-    max_tokens = 200,
+    temperature = temp,
+    top_p = top_percent, 
   )
   return response["choices"][0]["message"]["content"]
 
