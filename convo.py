@@ -36,7 +36,12 @@ with st.sidebar:
 openai.api_key = openai_api_key
   
 def clear_chat_history():
-    st.session_state.messages = [{"role": "assistant", "content": "How may I assist you today?"}]
+    initial_system = {"role": "system", "content": "You are a helpful assistant."}
+    st.session_state.messages.append(initial_system)
+    initial_message = {"role": "assistant", "content": "How may I assist you today?"}
+    st.session_state.messages.append(initial_message)
+    with st.chat_message(initial_message["role"]):
+        st.write(initial_message["content"])
   
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
