@@ -75,7 +75,7 @@ if prompt := st.chat_input():
 
 for message in st.session_state.messages:
     if message["role"] != "assistant":
-        message_output(message[-1])
+        message_output(message)
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
                 response = generate_response(prompt)
