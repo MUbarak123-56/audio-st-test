@@ -182,7 +182,7 @@ if prompt := st.chat_input("I want sparta"):
   #  sample_rate, audio_data = wavfile.read(bytes_io)
     
    # audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), 
-                   "sampling_rate": 16000}
+       #            "sampling_rate": 16000}
    # text = str(stt_model(audio_input)["text"])
    # new_message = {"role": "user", "content": st.chat_input(text)}
    # st.session_state.messages.append(new_message)
