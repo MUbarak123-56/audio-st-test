@@ -26,10 +26,17 @@ with st.sidebar:
         openai_api_key = st.secrets['OPENAI_API_TOKEN']
     else:
         openai_api_key = st.text_input('Enter OpenAI API token:', type='password')
-        if not (replicate_api.startswith('sk-'):
+        if not (openai_api_key).startswith('sk-') or len(openai_api_key) != 51:
             st.warning('Please enter your credentials!', icon='⚠️')
         else:
             st.success('Proceed to entering your prompt message!', icon='👉')
+
+ st.subheader('Models')
+    selected_model = st.sidebar.selectbox('Choose a GPT model', ['GPT 3.5', 'GPT 4'], key='selected_model')
+    if selected_model == 'GPT 3.5':
+        llm = 'gpt-3.5-turbo'
+    elif selected_model == 'GPT 4':
+        llm = 'gpt-4'
 
 openai.api_key = openai_api_key
 
@@ -43,7 +50,7 @@ def generate_response(input_query):
     
   #chain = LLMChain(llm=llm, prompt=prompt)
   response = openai.ChatCompletion.create(
-    model="gpt-4",
+    model=llm,
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
         {"role": "user", "content": input_query},
