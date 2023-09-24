@@ -72,7 +72,7 @@ if prompt := st.chat_input():
     new_message = {"role": "user", "content": prompt}
     st.session_state.messages.append(new_message)
 
-while True:
+if st.session_state.messages[-1]["role"] == "user":
     message_output(st.session_state.messages[-1])
 
     if st.session_state.messages[-1]["role"] != "assistant":
