@@ -1,16 +1,9 @@
 import streamlit as st
-from transformers import pipeline
-from transformers import WhisperProcessor, WhisperForConditionalGeneration
-from audio_recorder_streamlit import audio_recorder
-import numpy as np
-from scipy.io import wavfile
-from io import BytesIO
 from langchain.chat_models import ChatOpenAI
 from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 import openai
-from transformers import SpeechT5Processor, SpeechT5HifiGan, SpeechT5ForTextToSpeech
 from datasets import load_dataset
 import torch
 from IPython.display import Audio
