@@ -12,6 +12,8 @@ import base64
 
 #Audio(speech, rate=16000)
 #import librosa
+st.set_page_config(layout='wide', page_title = "Custom-made ChatGPT")
+
 with st.sidebar:
     st.title('GPT Personal Chatbot')
     if 'OPENAI_API_TOKEN' in st.secrets:
