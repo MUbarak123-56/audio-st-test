@@ -57,8 +57,9 @@ def generate_response(input_query):
   response = openai.ChatCompletion.create(
     model=llm,
     messages=st.session_state.messages,
-   # temperature = 0.9,
-    #max_tokens = 200,
+    temperature = 0.9,
+    top_p = 0.1, 
+    max_tokens = 200,
   )
   return response["choices"][0]["message"]["content"]
 
