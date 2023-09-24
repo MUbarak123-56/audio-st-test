@@ -13,7 +13,7 @@ import base64
 #Audio(speech, rate=16000)
 #import librosa
 with st.sidebar:
-    st.title('🦙💬 Llama 2 Chatbot')
+    st.title('GPT Personal Chatbot')
     if 'OPENAI_API_TOKEN' in st.secrets:
         st.success('API key already provided!', icon='✅')
         openai_api_key = st.secrets['OPENAI_API_TOKEN']
