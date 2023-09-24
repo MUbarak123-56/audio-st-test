@@ -46,10 +46,11 @@ st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 def generate_response(input_query):
   #chain = LLMChain(llm=llm, prompt=prompt)
-  st.session_state.messages.append({"role":"user", "content": input_query})
+  use_messages = st.session_state.messages
+  use_messages.append({"role":"user", "content": input_query})
   response = openai.ChatCompletion.create(
     model=llm,
-    messages=st.session_state.messages,
+    messages=use_messages,
     temperature = temp,
     top_p = top_percent, 
   )
