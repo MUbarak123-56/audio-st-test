@@ -1,8 +1,8 @@
 import streamlit as st
-from langchain.chat_models import ChatOpenAI
-from langchain.llms import OpenAI
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
+#from langchain.chat_models import ChatOpenAI
+#from langchain.llms import OpenAI
+#from langchain.prompts import PromptTemplate
+#from langchain.chains import LLMChain
 import openai
 from datasets import load_dataset
 import torch
