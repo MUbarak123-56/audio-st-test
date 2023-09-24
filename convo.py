@@ -40,19 +40,6 @@ def clear_chat_history():
   
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
-if "messages" not in st.session_state.keys():
-    st.session_state.messages = [{"role": "assistant", "content": "How may I assist you today?"}]
-
-# Display or clear chat messages
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
-
-if prompt := st.chat_input():
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.write(prompt)
-
 def generate_response(input_query):
   #chain = LLMChain(llm=llm, prompt=prompt)
   st.session_state.messages.append({"role":"user", "content": input_query})
@@ -63,6 +50,16 @@ def generate_response(input_query):
     top_p = top_percent, 
   )
   return response["choices"][0]["message"]["content"]
+
+if "messages" not in st.session_state.keys():
+    st.session_state.messages = [{"role": "assistant", "content": "How may I assist you today?"}]
+    with st.chat_message(message["role"]):
+        st.write(message["content"])
+
+if prompt := st.chat_input():
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.write(prompt)
 
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
@@ -76,3 +73,5 @@ if st.session_state.messages[-1]["role"] != "assistant":
             placeholder.markdown(full_response)
     message = {"role": "assistant", "content": full_response}
     st.session_state.messages.append(message)
+    with st.chat_message(st.session_state.messages[-1]["role"]):
+        st.write(st.session_state.messages[-1]["content"])
