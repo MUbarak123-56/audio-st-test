@@ -63,10 +63,10 @@ if "messages" not in st.session_state.keys():
     st.session_state.messages.append(initial_message)
 
 def message_output(message):
-    if message["role"] == "user":
-        with st.chat_message(message["role"]):
-            st.write(message["content"])
-    elif message["role"] == "assistant":
+    #if message["role"] == "user":
+        #with st.chat_message(message["role"]):
+         #   st.write(message["content"])
+    if message["role"] == "assistant":
         with st.chat_message("assistant"):
             use_response = message["content"]
             placeholder = st.empty()
@@ -81,9 +81,6 @@ message_output(st.session_state.messages[1])
 if prompt := st.chat_input():
     new_message = {"role": "user", "content": prompt}
     st.session_state.messages.append(new_message)
-    with st.chat_message("user"):
-        st.write(prompt)
-
 
 for message in st.session_state.messages[2:]:
     message_output(message)
