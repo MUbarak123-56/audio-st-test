@@ -171,24 +171,26 @@ def message_output(message):
 
 message_output(st.session_state.messages[1])
 
-
-if prompt := st.chat_input("Text Me"):
-    new_message = {"role": "user", "content": prompt}
-    st.session_state.messages.append(new_message)
-elif audio_bytes:
+input_format = st.sidebar.selectbox("Choose an input format", ["text", "audio"])
+if input_format == "text":
+    if prompt := st.chat_input("Text Me"):
+        new_message = {"role": "user", "content": prompt}
+        st.session_state.messages.append(new_message)
+elif input_format == "audio":
+    if audio_bytes:
     #new_audio = st.audio(audio_bytes, format="audio/wav")
-    bytes_io = BytesIO(audio_bytes)
+        bytes_io = BytesIO(audio_bytes)
     
-    sample_rate, audio_data = wavfile.read(bytes_io)
+        sample_rate, audio_data = wavfile.read(bytes_io)
     
-    audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), 
+        audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), 
                    "sampling_rate": 16000}
-    text = str(stt_model(audio_input)["text"])
-    with st.chat_message("user"):
-        st.write(text)
-    new_message = {"role": "user", "content": text}
-    st.session_state.messages.append(new_message)
-    audio_bytes = False
+        text = str(stt_model(audio_input)["text"])
+        with st.chat_message("user"):
+            st.write(text)
+        new_message = {"role": "user", "content": text}
+        st.session_state.messages.append(new_message)
+        audio_bytes = False
      
 #input()
 
