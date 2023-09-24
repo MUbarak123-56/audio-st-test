@@ -190,7 +190,6 @@ elif input_format == "audio":
             st.write(text)
         new_message = {"role": "user", "content": text}
         st.session_state.messages.append(new_message)
-        audio_bytes = False
      
 #input()
 
