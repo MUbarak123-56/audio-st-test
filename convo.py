@@ -64,8 +64,6 @@ def generate_response(input_query):
   )
   return response
 
-while True:
-    
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
