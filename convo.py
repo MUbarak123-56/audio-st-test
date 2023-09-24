@@ -66,7 +66,7 @@ def message_output(message):
         with st.chat_message(message["role"]):
             st.write(message["content"])
 
-message_output(initial_message)
+message_output(st.session_state.messages[1])
 
 while True:
     if prompt := st.chat_input():
