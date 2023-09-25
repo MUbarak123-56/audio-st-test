@@ -173,6 +173,14 @@ elif input_format == "audio":
         text = str(stt_model(audio_input)["text"])
         new_message = {"role": "user", "content": text}
         st.session_state.messages.append(new_message)
+def clear_chat_history():
+    st.session_state.messages = []
+    initial_system = {"role": "system", "content": "You are a helpful assistant."}
+    st.session_state.messages.append(initial_system)
+    initial_message = {"role": "assistant", "content": "How may I assist you today?"}
+    st.session_state.messages.append(initial_message)
+  
+st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 for message in st.session_state.messages[2:]:
     message_output(message)
@@ -190,11 +198,4 @@ if st.session_state.messages[-1]["role"] != "assistant":
     new_message = {"role": "assistant", "content": full_response}
     st.session_state.messages.append(new_message)
 
-def clear_chat_history():
-    st.session_state.messages = []
-    initial_system = {"role": "system", "content": "You are a helpful assistant."}
-    st.session_state.messages.append(initial_system)
-    initial_message = {"role": "assistant", "content": "How may I assist you today?"}
-    st.session_state.messages.append(initial_message)
-  
-st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
+
