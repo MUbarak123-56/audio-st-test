@@ -120,6 +120,7 @@ def message_output(message):
             #st.write(len(use_response))
             if audio_output == "Yes":
                 if (len(use_response)) >= 500:
+                    word = use_response
                     tot = 0
                     collect_response = []
                     reuse_words = ""
