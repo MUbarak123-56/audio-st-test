@@ -60,7 +60,8 @@ with st.sidebar:
             st.success('Proceed to entering your prompt message!', icon='👉')
             
     input_format = st.selectbox("Choose an input format", ["text", "audio"])
-    audio_bytes = audio_recorder(text="Click To Record", 
+    st.text("Click to Record")
+    audio_bytes = audio_recorder(text="", 
                                  recording_color="#e8b62c", 
                                  neutral_color="#6aa36f", 
                                  icon_name="microphone", 
