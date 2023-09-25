@@ -26,10 +26,10 @@ dataset_tts = "Matthijs/cmu-arctic-xvectors"
 @st.cache_resource()
 def models():
     stt_model = pipeline("automatic-speech-recognition", model=checkpoint_stt)
-    processor = BarkProcessor.from_pretrained(checkpoint_tts)
-    tts_model = BarkModel.from_pretrained(checkpoint_tts)
-    #processor = SpeechT5Processor.from_pretrained(checkpoint_tts)
-    #tts_model = SpeechT5ForTextToSpeech.from_pretrained(checkpoint_tts)
+    #processor = BarkProcessor.from_pretrained(checkpoint_tts)
+    #tts_model = BarkModel.from_pretrained(checkpoint_tts)
+    processor = SpeechT5Processor.from_pretrained(checkpoint_tts)
+    tts_model = SpeechT5ForTextToSpeech.from_pretrained(checkpoint_tts)
     vocoder = SpeechT5HifiGan.from_pretrained(checkpoint_vocoder)
 
     #processor = WhisperProcessor.from_pretrained(checkpoint)
@@ -42,7 +42,7 @@ stt_model, processor, vocoder, tts_model = models()
 @st.cache_data()
 def speech_embed():
     embeddings_dataset = load_dataset(dataset_tts, split="validation")
-    speaker_embeddings = torch.tensor(embeddings_dataset[7301]["xvector"]).unsqueeze(0)
+    speaker_embeddings = torch.tensor(embeddings_dataset[0]["xvector"]).unsqueeze(0)
     return speaker_embeddings
 
 speaker_embeddings = speech_embed()
@@ -80,8 +80,9 @@ def tts(input):
     with torch.no_grad():
         speech = tts_model.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder).cpu().numpy()
         #speech = tts_model.generate(**inputs).cpu().numpy()
-    sampling_rate = tts_model.generation_config.sample_rate
-    return speech, sampling_rate
+    #sampling_rate = tts_model.generation_config.sample_rate
+    #return speech, sampling_rate
+    return speech
   
 def generate_llm_response():
   #chain = LLMChain(llm=llm, prompt=prompt)
@@ -137,10 +138,12 @@ def message_output(message):
                     for i in range(len(collect_response)):
                         response_no = "Output " + str(i + 1)
                         st.text(response_no)
-                        tts_output, sampling_rate = tts(collect_response[i])[0], tts(collect_response[i])[1]
+                        #tts_output, sampling_rate = tts(collect_response[i])[0], tts(collect_response[i])[1]
+                        tts_output, sampling_rate = tts(collect_response[i]), 16000
                         st.audio(tts_output, format='audio/wav', sample_rate=sampling_rate)
                 else:
-                    tts_output, sampling_rate = tts(use_response)[0], tts(use_response)[1]
+                    #tts_output, sampling_rate = tts(use_response)[0], tts(use_response)[1]
+                    tts_output, sampling_rate = tts(use_response), 16000
                     st.audio(tts_output, format='audio/wav', sample_rate=sampling_rate)
             else:
                 st.text("No Audio Output.")
