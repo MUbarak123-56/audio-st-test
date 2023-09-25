@@ -180,7 +180,7 @@ if input_format == "text":
         st.session_state.messages.append(new_message)
 elif input_format == "audio":
     if audio_bytes:
-        new_audio = st.audio(audio_bytes, format="audio/wav")
+        #new_audio = st.audio(audio_bytes, format="audio/wav")
         bytes_io = BytesIO(audio_bytes)
     
         sample_rate, audio_data = wavfile.read(bytes_io)
