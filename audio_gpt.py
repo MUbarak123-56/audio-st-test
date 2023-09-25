@@ -175,7 +175,7 @@ def message_output(message):
             if (len(use_response)) >= 500:
                 n_response = len(use_response)//500
                 collect_response = []
-                for i in range(n_response):
+                for i in range(n_response + 1):
                     collect_response.append(use_response[i*500: (i + 1)*500])
                 for i in range(len(collect_response)):
                     response_no = "Output " + str(i + 1)
