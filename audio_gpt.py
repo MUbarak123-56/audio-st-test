@@ -58,7 +58,8 @@ with st.sidebar:
             st.warning('Please enter your credentials!', icon='⚠️')
         else:
             st.success('Proceed to entering your prompt message!', icon='👉')
-    
+            
+    input_format = st.selectbox("Choose an input format", ["text", "audio"])
     audio_bytes = audio_recorder(text="Click To Record", 
                                  recording_color="#e8b62c", 
                                  neutral_color="#6aa36f", 
@@ -74,7 +75,7 @@ with st.sidebar:
         llm = 'gpt-4'
     temp = st.number_input('temperature', min_value=0.01, max_value=4.0, value=0.1, step=0.01)
     top_percent = st.number_input('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
-    input_format = st.selectbox("Choose an input format", ["text", "audio"])
+   
 
 openai.api_key = openai_api_key
 
