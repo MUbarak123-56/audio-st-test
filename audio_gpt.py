@@ -58,10 +58,8 @@ with st.sidebar:
             st.warning('Please enter your credentials!', icon='⚠️')
         else:
             st.success('Proceed to entering your prompt message!', icon='👉')
-            
-    input_format = st.selectbox("Choose an input format", ["text", "audio"])
 
-    st.subheader('Models')
+    #st.subheader('Models')
     selected_model = st.selectbox('Choose a GPT model', ['GPT 3.5', 'GPT 4'], key='selected_model')
     if selected_model == 'GPT 3.5':
         llm = 'gpt-3.5-turbo'
@@ -69,6 +67,7 @@ with st.sidebar:
         llm = 'gpt-4'
     temp = st.number_input('temperature', min_value=0.01, max_value=4.0, value=0.1, step=0.01)
     top_percent = st.number_input('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
+    input_format = st.selectbox("Choose an input format", ["text", "audio"])
    
 
 openai.api_key = openai_api_key
@@ -87,15 +86,6 @@ def autoplay_audio(data):
         </audio>
         """
     return st.markdown(md, unsafe_allow_html=True,)
-  
-def clear_chat_history():
-    st.session_state.messages = []
-    initial_system = {"role": "system", "content": "You are a helpful assistant."}
-    st.session_state.messages.append(initial_system)
-    initial_message = {"role": "assistant", "content": "How may I assist you today?"}
-    st.session_state.messages.append(initial_message)
-  
-st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 def generate_llm_response():
   #chain = LLMChain(llm=llm, prompt=prompt)
@@ -192,3 +182,12 @@ if st.session_state.messages[-1]["role"] != "assistant":
             placeholder.markdown(full_response)
     new_message = {"role": "assistant", "content": full_response}
     st.session_state.messages.append(new_message)
+
+def clear_chat_history():
+    st.session_state.messages = []
+    initial_system = {"role": "system", "content": "You are a helpful assistant."}
+    st.session_state.messages.append(initial_system)
+    initial_message = {"role": "assistant", "content": "How may I assist you today?"}
+    st.session_state.messages.append(initial_message)
+  
+st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
