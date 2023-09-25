@@ -170,7 +170,7 @@ def message_output(message):
                 full_response += item
                 placeholder.markdown(full_response)
             placeholder.markdown(full_response)
-            st.write(len(use_response))
+            #st.write(len(use_response))
             if (len(use_response)) >= 500:
                 n_response = len(use_response)//500
                 collect_response = []
