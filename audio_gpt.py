@@ -1,6 +1,7 @@
 import streamlit as st
 from transformers import pipeline
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
+from transformers import BarkProcessor, BarkModel
 from audio_recorder_streamlit import audio_recorder
 import numpy as np
 from scipy.io import wavfile
@@ -17,15 +18,17 @@ import base64
 st.set_page_config(layout='wide', page_title = "TalkBot")
 
 checkpoint_stt = "openai/whisper-small.en"  
-checkpoint_tts = "microsoft/speecht5_tts"
+checkpoint_tts = "suno/bark-small"
 checkpoint_vocoder = "microsoft/speecht5_hifigan"
 dataset_tts = "Matthijs/cmu-arctic-xvectors"
 
 @st.cache_resource()
 def models():
     stt_model = pipeline("automatic-speech-recognition", model=checkpoint_stt)
-    processor = SpeechT5Processor.from_pretrained(checkpoint_tts)
-    tts_model = SpeechT5ForTextToSpeech.from_pretrained(checkpoint_tts)
+    processor = BarkProcessor.from_pretrained(checkpoint_tts)
+    tts_model = BarkModel.from_pretrained(checkpoint_tts)
+    #processor = SpeechT5Processor.from_pretrained(checkpoint_tts)
+    #tts_model = SpeechT5ForTextToSpeech.from_pretrained(checkpoint_tts)
     vocoder = SpeechT5HifiGan.from_pretrained(checkpoint_vocoder)
 
     #processor = WhisperProcessor.from_pretrained(checkpoint)
@@ -41,7 +44,7 @@ def speech_embed():
     speaker_embeddings = torch.tensor(embeddings_dataset[7301]["xvector"]).unsqueeze(0)
     return speaker_embeddings
 
-speaker_embeddings = speech_embed()
+#speaker_embeddings = speech_embed()
 
 with st.sidebar:
     st.title('TalkBot')
@@ -71,20 +74,11 @@ openai.api_key = openai_api_key
 
 def tts(input):
     inputs = processor(text=input, return_tensors="pt")
-    speech = tts_model.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder)
-    
-    return speech
-
-def autoplay_audio(data):
-    b64 = base64.b64encode(data).decode()
-    md = f"""
-        <audio controls autoplay="true">
-        <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-        </audio>
-        """
-    return st.markdown(md, unsafe_allow_html=True,)
+    #speech = tts_model.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder)
+    speech = tts_model.generate(**inputs, do_sample=True).cpu().numpy()
+    sampling_rate = tts_model.generation_config.sample_rate
+    return speech, sampling_rate
   
-
 def generate_llm_response():
   #chain = LLMChain(llm=llm, prompt=prompt)
   use_messages = st.session_state.messages
@@ -139,18 +133,18 @@ def message_output(message):
                     for i in range(len(collect_response)):
                         response_no = "Output " + str(i + 1)
                         st.text(response_no)
-                        tts_output = np.array(tts(collect_response[i]))
-                        st.audio(tts_output, format='audio/wav', sample_rate=16000)
+                        tts_output, sampling_rate = tts(collect_response[i])[0], tts(collect_response[i])[1]
+                        st.audio(tts_output, format='audio/wav', sample_rate=sampling_rate)
                 else:
-                    tts_output = np.array(tts(use_response))
-                    st.audio(tts_output, format='audio/wav', sample_rate=16000)
+                    tts_output, sampling_rate = tts(use_response)[0], tts(use_response)[1]
+                    st.audio(tts_output, format='audio/wav', sample_rate=sampling_rate)
             else:
                 st.text("No Audio Output.")
                     
 message_output(st.session_state.messages[1])
 
 if input_format == "text":
-    if prompt := st.chat_input("Text Me"):
+    if prompt := st.chat_input("Text Me", disabled=not openai_api_key):
         new_message = {"role": "user", "content": prompt}
         st.session_state.messages.append(new_message)
 elif input_format == "audio":
