@@ -67,13 +67,14 @@ with st.sidebar:
                                  sample_rate = 16000)
 
     st.subheader('Models')
-    selected_model = st.sidebar.selectbox('Choose a GPT model', ['GPT 3.5', 'GPT 4'], key='selected_model')
+    selected_model = st.selectbox('Choose a GPT model', ['GPT 3.5', 'GPT 4'], key='selected_model')
     if selected_model == 'GPT 3.5':
         llm = 'gpt-3.5-turbo'
     elif selected_model == 'GPT 4':
         llm = 'gpt-4'
-    temp = st.sidebar.number_input('temperature', min_value=0.01, max_value=4.0, value=0.1, step=0.01)
-    top_percent = st.sidebar.number_input('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
+    temp = st..number_input('temperature', min_value=0.01, max_value=4.0, value=0.1, step=0.01)
+    top_percent = st.number_input('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
+    input_format = st.selectbox("Choose an input format", ["text", "audio"])
 
 openai.api_key = openai_api_key
 
@@ -173,7 +174,7 @@ def message_output(message):
 
 message_output(st.session_state.messages[1])
 
-input_format = st.sidebar.selectbox("Choose an input format", ["text", "audio"])
+
 if input_format == "text":
     if prompt := st.chat_input("Text Me"):
         new_message = {"role": "user", "content": prompt}
