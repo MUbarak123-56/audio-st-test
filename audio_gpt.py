@@ -171,10 +171,20 @@ def message_output(message):
                 placeholder.markdown(full_response)
             placeholder.markdown(full_response)
             st.write(len(use_response))
-            tts_output = np.array(tts(use_response))
-            #st.write(len(tts_output))
-            st.audio(tts_output, format='audio/wav', sample_rate=16000)
-
+            if (len(use_response)) >= 500:
+                n_response = len(use_response)//500
+                collect_response = []
+                for i in range(n_response):
+                    collect_response.append(use_response[i*n_response: (i + 1)*n_response])
+                for i in range(len(collect_response)):
+                    response_no = "Output " + str(i + 1)
+                    st.text(response_no)
+                    tts_output = np.array(tts(collect_response[i]))
+                    st.audio(tts_output, format='audio/wav', sample_rate=16000)
+            else:
+                tts_output = np.array(tts(use_response))
+                st.audio(tts_output, format='audio/wav', sample_rate=16000)
+                
 message_output(st.session_state.messages[1])
 
 
