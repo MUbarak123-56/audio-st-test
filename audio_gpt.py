@@ -170,8 +170,9 @@ def message_output(message):
                 full_response += item
                 placeholder.markdown(full_response)
             placeholder.markdown(full_response)
+            st.write(len(use_response))
             tts_output = np.array(tts(use_response))
-            st.write(len(tts_output))
+            #st.write(len(tts_output))
             st.audio(tts_output, format='audio/wav', sample_rate=16000)
 
 message_output(st.session_state.messages[1])
