@@ -152,7 +152,7 @@ if input_format == "text":
         new_message = {"role": "user", "content": prompt}
         st.session_state.messages.append(new_message)
 elif input_format == "audio":
-    with st.sidebar():
+    with st.sidebar:
         st.text("Click to Record")
         audio_bytes = audio_recorder(text="", 
                                  recording_color="#e8b62c", 
