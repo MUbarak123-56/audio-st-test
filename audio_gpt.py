@@ -5,10 +5,6 @@ from audio_recorder_streamlit import audio_recorder
 import numpy as np
 from scipy.io import wavfile
 from io import BytesIO
-from langchain.chat_models import ChatOpenAI
-from langchain.llms import OpenAI
-from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
 import openai
 from transformers import SpeechT5Processor, SpeechT5HifiGan, SpeechT5ForTextToSpeech
 from datasets import load_dataset
@@ -58,18 +54,19 @@ with st.sidebar:
             st.warning('Please enter your credentials!', icon='⚠️')
         else:
             st.success('Proceed to entering your prompt message!', icon='👉')
+            
 
     #st.subheader('Models')
-    selected_model = st.selectbox('Choose a GPT model', ['GPT 3.5', 'GPT 4'], key='selected_model')
+    selected_model = st.selectbox('Choose a GPT model', ['GPT 3.5', 'GPT 4'], index = 1)
     if selected_model == 'GPT 3.5':
         llm = 'gpt-3.5-turbo'
     elif selected_model == 'GPT 4':
         llm = 'gpt-4'
     temp = st.number_input('temperature', min_value=0.01, max_value=4.0, value=0.1, step=0.01)
     top_percent = st.number_input('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
-    input_format = st.selectbox("Choose an input format", ["text", "audio"])
-   
-
+    input_format = st.selectbox("Choose an input format", ["text", "audio"], index = 0)
+    audio_output = st.selectbox("Do you want audio output?", ["Yes", "No"], index = 0)
+    
 openai.api_key = openai_api_key
 
 def tts(input):
@@ -86,6 +83,7 @@ def autoplay_audio(data):
         </audio>
         """
     return st.markdown(md, unsafe_allow_html=True,)
+  
 
 def generate_llm_response():
   #chain = LLMChain(llm=llm, prompt=prompt)
@@ -120,22 +118,35 @@ def message_output(message):
                 placeholder.markdown(full_response)
             placeholder.markdown(full_response)
             #st.write(len(use_response))
-            if (len(use_response)) >= 500:
-                n_response = len(use_response)//500
-                collect_response = []
-                for i in range(n_response + 1):
-                    collect_response.append(use_response[i*500: (i + 1)*500])
-                for i in range(len(collect_response)):
-                    response_no = "Output " + str(i + 1)
-                    st.text(response_no)
-                    tts_output = np.array(tts(collect_response[i]))
+            if audio_output == "Yes":
+                if (len(use_response)) >= 500:
+                    tot = 0
+                    collect_response = []
+                    reuse_words = ""
+                    next_word = word
+                    while tot < len(word):
+                        new_word = next_word[:500]
+                        good_word = new_word[:len(new_word) - new_word[::-1].find(" ")]
+                        collect_response.append(good_word)
+                        reuse_words += good_word
+                        tot += len(good_word)
+                        next_word = word[tot:]
+
+                    collect_response[-2] = collect_response[-2] + collect_response[-1]
+                    collect_response = collect_response[:-1]
+                    
+                    for i in range(len(collect_response)):
+                        response_no = "Output " + str(i + 1)
+                        st.text(response_no)
+                        tts_output = np.array(tts(collect_response[i]))
+                        st.audio(tts_output, format='audio/wav', sample_rate=16000)
+                else:
+                    tts_output = np.array(tts(use_response))
                     st.audio(tts_output, format='audio/wav', sample_rate=16000)
             else:
-                tts_output = np.array(tts(use_response))
-                st.audio(tts_output, format='audio/wav', sample_rate=16000)
-                
+                st.text("No Audio Output.")
+                    
 message_output(st.session_state.messages[1])
-
 
 if input_format == "text":
     if prompt := st.chat_input("Text Me"):
@@ -159,13 +170,8 @@ elif input_format == "audio":
         audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), 
                    "sampling_rate": 16000}
         text = str(stt_model(audio_input)["text"])
-        #with st.chat_message("user"):
-        #    st.write(text)
         new_message = {"role": "user", "content": text}
         st.session_state.messages.append(new_message)
-        
-     
-#input()
 
 for message in st.session_state.messages[2:]:
     message_output(message)
