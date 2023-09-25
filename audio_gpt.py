@@ -75,7 +75,7 @@ openai.api_key = openai_api_key
 def tts(input):
     inputs = processor(text=input, return_tensors="pt")
     #speech = tts_model.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder)
-    speech = tts_model.generate(**inputs, do_sample=True).cpu().numpy()
+    speech = tts_model.generate(**inputs).cpu().numpy()
     sampling_rate = tts_model.generation_config.sample_rate
     return speech, sampling_rate
   
