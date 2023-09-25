@@ -60,13 +60,6 @@ with st.sidebar:
             st.success('Proceed to entering your prompt message!', icon='👉')
             
     input_format = st.selectbox("Choose an input format", ["text", "audio"])
-    st.text("Click to Record")
-    audio_bytes = audio_recorder(text="", 
-                                 recording_color="#e8b62c", 
-                                 neutral_color="#6aa36f", 
-                                 icon_name="microphone", 
-                                 icon_size="6x", 
-                                 sample_rate = 16000)
 
     st.subheader('Models')
     selected_model = st.selectbox('Choose a GPT model', ['GPT 3.5', 'GPT 4'], key='selected_model')
@@ -194,6 +187,13 @@ if input_format == "text":
         new_message = {"role": "user", "content": prompt}
         st.session_state.messages.append(new_message)
 elif input_format == "audio":
+    st.text("Click to Record")
+    audio_bytes = audio_recorder(text="", 
+                                 recording_color="#e8b62c", 
+                                 neutral_color="#6aa36f", 
+                                 icon_name="microphone", 
+                                 icon_size="6x", 
+                                 sample_rate = 16000)
     if audio_bytes:
         #new_audio = st.audio(audio_bytes, format="audio/wav")
         bytes_io = BytesIO(audio_bytes)
