@@ -18,7 +18,8 @@ import base64
 st.set_page_config(layout='wide', page_title = "TalkBot")
 
 checkpoint_stt = "openai/whisper-small.en"  
-checkpoint_tts = "suno/bark-small"
+#checkpoint_tts = "suno/bark-small"
+checkpoint_tts = "microsoft/speecht5_tts"
 checkpoint_vocoder = "microsoft/speecht5_hifigan"
 dataset_tts = "Matthijs/cmu-arctic-xvectors"
 
@@ -44,7 +45,7 @@ def speech_embed():
     speaker_embeddings = torch.tensor(embeddings_dataset[7301]["xvector"]).unsqueeze(0)
     return speaker_embeddings
 
-#speaker_embeddings = speech_embed()
+speaker_embeddings = speech_embed()
 
 with st.sidebar:
     st.title('TalkBot')
@@ -74,8 +75,11 @@ openai.api_key = openai_api_key
 
 def tts(input):
     inputs = processor(text=input, return_tensors="pt")
-    #speech = tts_model.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder)
-    speech = tts_model.generate(**inputs).cpu().numpy()
+    #device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    #tts_model.to(device)
+    with torch.no_grad():
+        speech = tts_model.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder).cpu().numpy()
+        #speech = tts_model.generate(**inputs).cpu().numpy()
     sampling_rate = tts_model.generation_config.sample_rate
     return speech, sampling_rate
   
