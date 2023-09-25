@@ -73,21 +73,6 @@ with st.sidebar:
 
 openai.api_key = openai_api_key
 
-def generate_response(input_query):
-
-  response = openai.ChatCompletion.create(
-    model=llm,
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": input_query},
-        #{"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-        #{"role": "user", "content": "Where was it played?"}
-    ],
-    temperature = temp,
-    top_p = top_percent
-  )
-  return response["choices"][0]["message"]["content"]
-
 def tts(input):
     inputs = processor(text=input, return_tensors="pt")
     speech = tts_model.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder)
@@ -102,26 +87,6 @@ def autoplay_audio(data):
         </audio>
         """
     return st.markdown(md, unsafe_allow_html=True,)
-    
-#if audio_bytes:
- #   new_audio = st.audio(audio_bytes, format="audio/wav")
- #   bytes_io = BytesIO(audio_bytes)
-    
- #   sample_rate, audio_data = wavfile.read(bytes_io)
-    
- #   audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), 
-                   #"sampling_rate": 16000}
- #   st.write(audio_input)
- #   text = str(stt_model(audio_input)["text"])
- #   st.write(text)
-
-    
-    #st.info(output)
-
-    #tts_output = np.array(tts(output))
-    #st.audio(tts_output, format='audio/wav', sample_rate=16000)
-
-#audio, text = st.tabs(["Text", "Audio"])
   
 def clear_chat_history():
     st.session_state.messages = []
