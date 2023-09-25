@@ -14,7 +14,7 @@ import os
 import base64
 
 
-st.set_page_config(layout='wide', page_title = "Audio ChatGPT")
+st.set_page_config(layout='wide', page_title = "TalkBot")
 
 checkpoint_stt = "openai/whisper-small.en"  
 checkpoint_tts = "microsoft/speecht5_tts"
@@ -44,7 +44,7 @@ def speech_embed():
 speaker_embeddings = speech_embed()
 
 with st.sidebar:
-    st.title('GPT Personal Chatbot')
+    st.title('TalkBot')
     if 'OPENAI_API_TOKEN' in st.secrets:
         st.success('API key already provided!', icon='✅')
         openai_api_key = st.secrets['OPENAI_API_TOKEN']
@@ -173,14 +173,6 @@ elif input_format == "audio":
         text = str(stt_model(audio_input)["text"])
         new_message = {"role": "user", "content": text}
         st.session_state.messages.append(new_message)
-def clear_chat_history():
-    st.session_state.messages = []
-    initial_system = {"role": "system", "content": "You are a helpful assistant."}
-    st.session_state.messages.append(initial_system)
-    initial_message = {"role": "assistant", "content": "How may I assist you today?"}
-    st.session_state.messages.append(initial_message)
-  
-st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 for message in st.session_state.messages[2:]:
     message_output(message)
@@ -198,4 +190,11 @@ if st.session_state.messages[-1]["role"] != "assistant":
     new_message = {"role": "assistant", "content": full_response}
     st.session_state.messages.append(new_message)
 
-
+def clear_chat_history():
+    st.session_state.messages = []
+    initial_system = {"role": "system", "content": "You are a helpful assistant."}
+    st.session_state.messages.append(initial_system)
+    initial_message = {"role": "assistant", "content": "How may I assist you today?"}
+    st.session_state.messages.append(initial_message)
+  
+st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
