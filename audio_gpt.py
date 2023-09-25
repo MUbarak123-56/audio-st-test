@@ -39,14 +39,6 @@ def models():
 
 stt_model, processor, vocoder, tts_model = models()
 
-@st.cache_data()
-def speech_embed():
-    embeddings_dataset = load_dataset(dataset_tts, split="validation")
-    speaker_embeddings = torch.tensor(embeddings_dataset[0]["xvector"]).unsqueeze(0)
-    return speaker_embeddings
-
-speaker_embeddings = speech_embed()
-
 with st.sidebar:
     st.title('TalkBot')
     if 'OPENAI_API_TOKEN' in st.secrets:
@@ -70,8 +62,21 @@ with st.sidebar:
     top_percent = st.number_input('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
     input_format = st.selectbox("Choose an input format", ["text", "audio"], index = 0)
     audio_output = st.selectbox("Do you want audio output?", ["Yes", "No"], index = 0)
-    
+    if audio_output == "Yes":
+        gender_select = st.selectbox("Would you like your speaker to be male or female?", ["Male", "Female"], index = 1)
+
 openai.api_key = openai_api_key
+
+@st.cache_data()
+def speech_embed():
+    embeddings_dataset = load_dataset(dataset_tts, split="validation")
+    if gender_select == "male":
+        embed = torch.tensor(embeddings_dataset[embeddings_dataset["filename"]=="cmu_us_bdl_arctic-wav-arctic_a0009"]["xvector"]).unsqueeze(0)
+    elif gender_select == "female":
+        embed = torch.tensor(embeddings_dataset[embeddings_dataset["filename"]=="cmu_us_clb_arctic-wav-arctic_a0144"]["xvector"]).unsqueeze(0)
+    return embed
+
+speaker_embeddings = speech_embed()
 
 def tts(input):
     inputs = processor(text=input, return_tensors="pt")
