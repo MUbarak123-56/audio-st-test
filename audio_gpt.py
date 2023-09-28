@@ -13,12 +13,11 @@ import torch
 from IPython.display import Audio
 import os
 import base64
-
+import pandas as pd
 
 st.set_page_config(layout='wide', page_title = "TalkBot")
 
 checkpoint_stt = "openai/whisper-small.en"  
-#checkpoint_tts = "suno/bark-small"
 checkpoint_tts = "microsoft/speecht5_tts"
 checkpoint_vocoder = "microsoft/speecht5_hifigan"
 dataset_tts = "Matthijs/cmu-arctic-xvectors"
@@ -26,14 +25,9 @@ dataset_tts = "Matthijs/cmu-arctic-xvectors"
 @st.cache_resource()
 def models():
     stt_model = pipeline("automatic-speech-recognition", model=checkpoint_stt)
-    #processor = BarkProcessor.from_pretrained(checkpoint_tts)
-    #tts_model = BarkModel.from_pretrained(checkpoint_tts)
     processor = SpeechT5Processor.from_pretrained(checkpoint_tts)
     tts_model = SpeechT5ForTextToSpeech.from_pretrained(checkpoint_tts)
     vocoder = SpeechT5HifiGan.from_pretrained(checkpoint_vocoder)
-
-    #processor = WhisperProcessor.from_pretrained(checkpoint)
-    #model = WhisperForConditionalGeneration.from_pretrained(checkpoint)
     
     return stt_model, processor, vocoder, tts_model
 
@@ -51,8 +45,6 @@ with st.sidebar:
         else:
             st.success('Proceed to entering your prompt message!', icon='👉')
             
-
-    #st.subheader('Models')
     selected_model = st.selectbox('Choose a GPT model', ['GPT 3.5', 'GPT 4'], index = 1)
     if selected_model == 'GPT 3.5':
         llm = 'gpt-3.5-turbo'
@@ -70,29 +62,29 @@ openai.api_key = openai_api_key
 @st.cache_data()
 def speech_embed():
     embeddings_dataset = load_dataset(dataset_tts, split="validation")
-    if gender_select == "male":
-        embed = torch.tensor(embeddings_dataset[embeddings_dataset["filename"]=="cmu_us_bdl_arctic-wav-arctic_a0009"]["xvector"]).unsqueeze(0)
-    elif gender_select == "female":
-        embed = torch.tensor(embeddings_dataset[embeddings_dataset["filename"]=="cmu_us_clb_arctic-wav-arctic_a0144"]["xvector"]).unsqueeze(0)
-    return embed
+    embeddings_dataset = embeddings_dataset.to_pandas()
+    if gender_select == "Male":
+        #torch.tensor(list(embded[embded["filename"]=="cmu_us_bdl_arctic-wav-arctic_a0009"]["xvector"]))
+        embed_use = torch.tensor(list(embeddings_dataset[embeddings_dataset["filename"]=="cmu_us_bdl_arctic-wav-arctic_a0009"]["xvector"]))
+    elif gender_select == "Female":
+        embed_use = torch.tensor(list(embeddings_dataset[embeddings_dataset["filename"]=="cmu_us_clb_arctic-wav-arctic_a0144"]["xvector"]))
+    return embed_use
 
 speaker_embeddings = speech_embed()
 
 def tts(input):
     inputs = processor(text=input, return_tensors="pt")
-    #device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    #tts_model.to(device)
     with torch.no_grad():
         speech = tts_model.generate_speech(inputs["input_ids"], speaker_embeddings, vocoder=vocoder).cpu().numpy()
-        #speech = tts_model.generate(**inputs).cpu().numpy()
-    #sampling_rate = tts_model.generation_config.sample_rate
-    #return speech, sampling_rate
+
     return speech
   
 def generate_llm_response():
-  #chain = LLMChain(llm=llm, prompt=prompt)
-  use_messages = st.session_state.messages
-  #use_messages.append({"role":"user", "content": input_query})
+
+  use_messages = []
+  for i in range(len(st.session_state.messages)):
+      use_messages.append({"role": st.session_state.messages[i]["role"], "content": st.session_state.messages[i]["content"]})
+
   response = openai.ChatCompletion.create(
     model=llm,
     messages=use_messages,
@@ -101,12 +93,18 @@ def generate_llm_response():
   )
   return response["choices"][0]["message"]["content"]
 
+
 if "messages" not in st.session_state.keys():
     st.session_state.messages = []
-    initial_system = {"role": "system", "content": "You are a helpful assistant."}
+    initial_system = {"role": "system", "content": "You are a helpful assistant.", "audio":""}
     st.session_state.messages.append(initial_system)
-    initial_message = {"role": "assistant", "content": "How may I assist you today?"}
+    initial_message = {"role": "assistant", "content": "How may I assist you today?", "audio":""}
     st.session_state.messages.append(initial_message)
+
+with st.chat_message(st.session_state.messages[1]["role"]):
+    st.write(st.session_state.messages[1]["content"])
+    tts_init1, sampling_rate = tts(st.session_state.messages[1]["content"]), 16000
+    st.audio(tts_init1, format='audio/wav', sample_rate=sampling_rate)
 
 def message_output(message):
     if message["role"] == "user":
@@ -121,68 +119,51 @@ def message_output(message):
                 full_response += item
                 placeholder.markdown(full_response)
             placeholder.markdown(full_response)
-            #st.write(len(use_response))
+            
             if audio_output == "Yes":
-                if (len(use_response)) >= 500:
-                    word = use_response
-                    tot = 0
-                    collect_response = []
-                    reuse_words = ""
-                    next_word = word
-                    while tot < len(word):
-                        new_word = next_word[:500]
-                        good_word = new_word[:len(new_word) - new_word[::-1].find(" ")]
-                        collect_response.append(good_word)
-                        reuse_words += good_word
-                        tot += len(good_word)
-                        next_word = word[tot:]
-
-                    collect_response[-2] = collect_response[-2] + collect_response[-1]
-                    collect_response = collect_response[:-1]
-                    
-                    for i in range(len(collect_response)):
+                if len(message["audio"]) > 100:
+                    st.audio(message["audio"], format = "audio/wav", sample_rate=16000)
+                else:
+                    for i in range(len(message["audio"])):
                         response_no = "Output " + str(i + 1)
                         st.text(response_no)
-                        #tts_output, sampling_rate = tts(collect_response[i])[0], tts(collect_response[i])[1]
-                        tts_output, sampling_rate = tts(collect_response[i]), 16000
-                        st.audio(tts_output, format='audio/wav', sample_rate=sampling_rate)
-                else:
-                    #tts_output, sampling_rate = tts(use_response)[0], tts(use_response)[1]
-                    tts_output, sampling_rate = tts(use_response), 16000
-                    st.audio(tts_output, format='audio/wav', sample_rate=sampling_rate)
+                        st.audio(message["audio"][i], format='audio/wav', sample_rate=16000)
             else:
                 st.text("No Audio Output.")
-                    
-message_output(st.session_state.messages[1])
 
 if input_format == "text":
     if prompt := st.chat_input("Text Me", disabled=not openai_api_key):
-        new_message = {"role": "user", "content": prompt}
+        new_message = {"role": "user", "content": prompt, "audio":""}
+        #with st.chat_message(new_message["role"]):
+        #    st.write(new_message["content"])
         st.session_state.messages.append(new_message)
+
 elif input_format == "audio":
     with st.sidebar:
         st.text("Click to Record")
         audio_bytes = audio_recorder(text="", 
-                                 recording_color="#e8b62c", 
-                                 neutral_color="#6aa36f", 
-                                 icon_name="microphone", 
-                                 icon_size="6x", 
-                                 sample_rate = 16000)
+                                    recording_color="#e8b62c", 
+                                    neutral_color="#6aa36f", 
+                                    icon_name="microphone", 
+                                    icon_size="6x", 
+                                    sample_rate = 16000)
     if audio_bytes:
-        #new_audio = st.audio(audio_bytes, format="audio/wav")
+        
         bytes_io = BytesIO(audio_bytes)
-    
+            
         sample_rate, audio_data = wavfile.read(bytes_io)
-    
+            
         audio_input = {"array": audio_data[:,0].astype(np.float32)*(1/32768.0), 
-                   "sampling_rate": 16000}
+                           "sampling_rate": 16000}
         text = str(stt_model(audio_input)["text"])
-        new_message = {"role": "user", "content": text}
+        new_message = {"role": "user", "content": text, "audio":""}
+        #with st.chat_message(new_message["role"]):
+        #    st.write(new_message["content"])
         st.session_state.messages.append(new_message)
 
 for message in st.session_state.messages[2:]:
     message_output(message)
-
+    
 if st.session_state.messages[-1]["role"] != "assistant":
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
@@ -194,13 +175,47 @@ if st.session_state.messages[-1]["role"] != "assistant":
                 placeholder.markdown(full_response)
             placeholder.markdown(full_response)
     new_message = {"role": "assistant", "content": full_response}
-    st.session_state.messages.append(new_message)
+    if audio_output == "Yes":
+        if (len(full_response)) >= 500:
+            word = full_response
+            tot = 0
+            collect_response = []
+            reuse_words = ""
+            next_word = word
+            while tot < len(word):
+                new_word = next_word[:500]
+                good_word = new_word[:len(new_word) - new_word[::-1].find(" ")]
+                collect_response.append(good_word)
+                reuse_words += good_word
+                tot += len(good_word)
+                next_word = word[tot:]
 
+            collect_response[-2] = collect_response[-2] + collect_response[-1]
+            collect_response = collect_response[:-1]
+            tts_list = []
+            for i in range(len(collect_response)):
+                response_no = "Output " + str(i + 1)
+                st.text(response_no)
+                tts_output, sampling_rate = tts(collect_response[i]), 16000
+                tts_list.append(tts_output)
+                st.audio(tts_output, format='audio/wav', sample_rate=sampling_rate)
+            new_message["audio"] = tts_list
+        else:
+            tts_output, sampling_rate = tts(full_response), 16000
+            new_message["audio"] = tts_output
+            st.audio(tts_output, format='audio/wav', sample_rate=sampling_rate)
+    else:
+        st.text("No Audio Output.")
+        new_message["audio"] = ""
+
+    st.session_state.messages.append(new_message)
+            
 def clear_chat_history():
     st.session_state.messages = []
-    initial_system = {"role": "system", "content": "You are a helpful assistant."}
+    audio_list = []
+    initial_system = {"role": "system", "content": "You are a helpful assistant.", "audio":""}
     st.session_state.messages.append(initial_system)
-    initial_message = {"role": "assistant", "content": "How may I assist you today?"}
+    initial_message = {"role": "assistant", "content": "How may I assist you today?", "audio":""}
     st.session_state.messages.append(initial_message)
   
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
