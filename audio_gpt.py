@@ -1,7 +1,5 @@
 import streamlit as st
 from transformers import pipeline
-from transformers import WhisperProcessor, WhisperForConditionalGeneration
-from transformers import BarkProcessor, BarkModel
 from audio_recorder_streamlit import audio_recorder
 import numpy as np
 from scipy.io import wavfile
@@ -16,6 +14,25 @@ import base64
 import pandas as pd
 
 st.set_page_config(layout='wide', page_title = "TalkBot")
+with open("style.css")as f:
+    st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html = True)
+
+def add_bg(image_file):
+    with open(image_file, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+    st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        background-image: url(data:image/{"png"};base64,{encoded_string.decode()});
+        background-size: cover;}}
+        }}
+    </style>
+    """,
+    unsafe_allow_html=True
+    )
+
+add_bg("ai.png") 
 
 checkpoint_stt = "openai/whisper-small.en"  
 checkpoint_tts = "microsoft/speecht5_tts"
@@ -34,7 +51,7 @@ def models():
 stt_model, processor, vocoder, tts_model = models()
 
 with st.sidebar:
-    st.title('TalkBot')
+    st.title('Settings')
     if 'OPENAI_API_TOKEN' in st.secrets:
         st.success('API key already provided!', icon='✅')
         openai_api_key = st.secrets['OPENAI_API_TOKEN']
@@ -44,18 +61,21 @@ with st.sidebar:
             st.warning('Please enter your credentials!', icon='⚠️')
         else:
             st.success('Proceed to entering your prompt message!', icon='👉')
-            
+
+    st.markdown("<h3 style='text-align: left; color: white;'>Parameters</h3>", unsafe_allow_html=True)
+    st.markdown("<h5 style='text-align: left; color: white;'>Choose your parameters below.</h5>", unsafe_allow_html=True)
+    
     selected_model = st.selectbox('Choose a GPT model', ['GPT 3.5', 'GPT 4'], index = 1)
     if selected_model == 'GPT 3.5':
         llm = 'gpt-3.5-turbo'
     elif selected_model == 'GPT 4':
         llm = 'gpt-4'
-    temp = st.number_input('temperature', min_value=0.01, max_value=4.0, value=0.1, step=0.01)
-    top_percent = st.number_input('top_p', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
-    input_format = st.selectbox("Choose an input format", ["text", "audio"], index = 0)
+    temp = st.number_input('Temperature', min_value=0.01, max_value=4.0, value=0.1, step=0.01)
+    top_percent = st.number_input('Top_Percent', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
+    input_format = st.selectbox("Choose an input format", ["Text", "Audio"], index = 0)
     audio_output = st.selectbox("Do you want audio output?", ["Yes", "No"], index = 0)
     if audio_output == "Yes":
-        gender_select = st.selectbox("Would you like your speaker to be male or female?", ["Male", "Female"], index = 1)
+        gender_select = st.selectbox("Choose the gender of your speaker", ["Male", "Female"], index = 1)
 
 openai.api_key = openai_api_key
 
@@ -72,6 +92,8 @@ def speech_embed():
 
 speaker_embeddings = speech_embed()
 
+
+st.markdown("<h1 style='text-align: center; color: diamond;'>TalkGPT 🎤</h1>", unsafe_allow_html=True)
 def tts(input):
     inputs = processor(text=input, return_tensors="pt")
     with torch.no_grad():
@@ -131,14 +153,14 @@ def message_output(message):
             else:
                 st.text("No Audio Output.")
 
-if input_format == "text":
+if input_format == "Text":
     if prompt := st.chat_input("Text Me", disabled=not openai_api_key):
         new_message = {"role": "user", "content": prompt, "audio":""}
         #with st.chat_message(new_message["role"]):
         #    st.write(new_message["content"])
         st.session_state.messages.append(new_message)
 
-elif input_format == "audio":
+elif input_format == "Audio":
     with st.sidebar:
         st.text("Click to Record")
         audio_bytes = audio_recorder(text="", 
