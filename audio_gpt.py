@@ -32,7 +32,7 @@ def add_bg(image_file):
     unsafe_allow_html=True
     )
 
-add_bg("ai.png") 
+#add_bg("ai.png") 
 
 checkpoint_stt = "openai/whisper-small.en"  
 checkpoint_tts = "microsoft/speecht5_tts"
