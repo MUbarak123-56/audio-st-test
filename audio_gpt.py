@@ -13,7 +13,7 @@ import os
 import base64
 import pandas as pd
 
-st.set_page_config(layout='wide', page_title = "TalkBot")
+st.set_page_config(layout='wide', page_title = "TalkGPT")
 with open("style.css")as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html = True)
 
@@ -71,7 +71,7 @@ with st.sidebar:
     elif selected_model == 'GPT 4':
         llm = 'gpt-4'
     temp = st.number_input('Temperature', min_value=0.01, max_value=4.0, value=0.1, step=0.01)
-    top_percent = st.number_input('Top_Percent', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
+    top_percent = st.number_input('Top Percent', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
     input_format = st.selectbox("Choose an input format", ["Text", "Audio"], index = 0)
     audio_output = st.selectbox("Do you want audio output?", ["Yes", "No"], index = 0)
     if audio_output == "Yes":
@@ -93,7 +93,18 @@ def speech_embed():
 speaker_embeddings = speech_embed()
 
 
-st.markdown("<h1 style='text-align: center; color: diamond;'>TalkGPT 🎤</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; color: gold;'>TalkGPT 🎤</h1>", unsafe_allow_html=True)
+st.markdown("<h3 style='text-align: center; color: white;'>Welcome to TalkGPT. You can speak to GPT and it will speak back to you.</h3>", unsafe_allow_html=True)
+
+with st.expander("Click to see instructions on how the parameters/settings work"):
+    st.markdown("<h8 style='text-align: center; color: white;'>**Enter OpenAI API token**: You can create an OpenAI token [here](https://openai.com/) and watching this [video](https://www.youtube.com/watch?v=EQQjdwdVQ-M)</h8>", unsafe_allow_html=True)
+    st.markdown("<h8 style='text-align: center; color: white;'>**Choose a GPT model**: You can use this parameter to choose between GPT 3.5 and GPT 4.</h8>", unsafe_allow_html=True)
+    st.markdown("<h8 style='text-align: center; color: white;'>**Temperature**: You can change this value to transform the creativity of GPT. A high temperature will make GPT too creative to the point that it produces meaningless statements. A very low temperature makes GPT repetitive.</h8>", unsafe_allow_html=True)
+    st.markdown("<h8 style='text-align: center; color: white;'>**Top Percent**: This is used to select the top n percent of the predicted next word. This can serve as a way to ensure GPT is likely going to produce words that matter.</h8>", unsafe_allow_html=True)
+    st.markdown("<h8 style='text-align: center; color: white;'>**Choose an input format**: You can select between text and audio. If you choose audio, you will have to speak into an audio recorder and if you choose text you will type in your question for GPT.</h8>", unsafe_allow_html=True)
+    st.markdown("<h8 style='text-align: center; color: white;'>**Do you want an audio output?**: If you select yes, you will get an audio response from GPT alongside the text response.</h8>", unsafe_allow_html=True)
+    st.markdown("<h8 style='text-align: center; color: white;'>**Choose the gender of your speaker**: You can select the gender of your speaker to be a male or female.</h8>", unsafe_allow_html=True)
+
 def tts(input):
     inputs = processor(text=input, return_tensors="pt")
     with torch.no_grad():
