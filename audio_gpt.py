@@ -13,7 +13,7 @@ import os
 import base64
 import pandas as pd
 
-st.set_page_config(layout='wide', page_title = "TalkGPT")
+st.set_page_config(layout='wide', page_title = "TalkGPT 🎤")
 with open("style.css")as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html = True)
 
