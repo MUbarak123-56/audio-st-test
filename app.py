@@ -217,7 +217,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
             next_word = word
             while tot < len(word):
                 new_word = next_word[:500]
-                good_word = new_word[:len(new_word) - new_word[::-1].find(" ")]
+                good_word = new_word[:len(new_word) - new_word[::-1].find(".")]
                 collect_response.append(good_word)
                 reuse_words += good_word
                 tot += len(good_word)
