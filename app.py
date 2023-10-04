@@ -223,8 +223,8 @@ if st.session_state.messages[-1]["role"] != "assistant":
                 tot += len(good_word)
                 next_word = word[tot:]
 
-            collect_response[-2] = collect_response[-2] + collect_response[-1]
-            collect_response = collect_response[:-1]
+            #collect_response[-2] = collect_response[-2] + collect_response[-1]
+            #collect_response = collect_response[:-1]
             tts_list = []
             for i in range(len(collect_response)):
                 response_no = "Output " + str(i + 1)
