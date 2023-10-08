@@ -1,4 +1,3 @@
-gradio
 streamlit==1.26.0
 audio-recorder-streamlit
 transformers
@@ -6,9 +5,7 @@ openai
 torch
 numpy
 scipy
-langchain
 tabulate
 datasets[audio]
 sentencepiece
-IPython
 torchaudio
