@@ -71,7 +71,7 @@ with st.sidebar:
         llm = 'gpt-4'
     temp = st.number_input('Temperature', min_value=0.01, max_value=4.0, value=0.1, step=0.01)
     top_percent = st.number_input('Top Percent', min_value=0.01, max_value=1.0, value=0.9, step=0.01)
-    input_format = st.selectbox("Choose an input format", ["Text", "Audio"], index = 0)
+    input_format = st.selectbox("Choose an input format", ["Text", "Audio"], index = 0, disabled=not openai_api_key)
     audio_output = st.selectbox("Do you want audio output?", ["Yes", "No"], index = 0)
     if audio_output == "Yes":
         gender_select = st.selectbox("Choose the gender of your speaker", ["Male", "Female"], index = 1)
