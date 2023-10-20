@@ -128,7 +128,7 @@ def generate_llm_response():
 
 if "messages" not in st.session_state.keys():
     st.session_state.messages = []
-    initial_system = {"role": "system", "content": "You are a helpful assistant.", "audio":""}
+    initial_system = {"role": "system", "content": "You are a helpful assistant. You will always convert numbers to text when generating a response.", "audio":""}
     st.session_state.messages.append(initial_system)
     initial_message = {"role": "assistant", "content": "How may I assist you today?", "audio":""}
     st.session_state.messages.append(initial_message)
@@ -245,7 +245,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
 def clear_chat_history():
     st.session_state.messages = []
     audio_list = []
-    initial_system = {"role": "system", "content": "You are a helpful assistant.", "audio":""}
+    initial_system = {"role": "system", "content": "You are a helpful assistant. You will always convert numbers to text when generating a response.", "audio":""}
     st.session_state.messages.append(initial_system)
     initial_message = {"role": "assistant", "content": "How may I assist you today?", "audio":""}
     st.session_state.messages.append(initial_message)
