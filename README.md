@@ -1,6 +1,8 @@
 # TalkGPT
 ![python](https://img.shields.io/badge/Python-3.9.0%2B-blue)
 [![View on Streamlit](https://img.shields.io/badge/Streamlit-View%20on%20Streamlit%20app-ff69b4?logo=streamlit)](https://talk-gpt.streamlit.app/)
+[![Read on Medium](https://img.shields.io/badge/Medium-12100E?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@Mubarak_Ganiyu/talkgpt-voice-integration-with-chatgpt-dfbd02a0ceab)
+[![View on Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/mabrouk/talkgpt)
 
 ## Introduction
 
@@ -10,10 +12,6 @@ One other notable concern for occasional users of ChatGPT is the necessity of a 
 
 Introducing TalkGPT, an app recently developed to address the challenges faced by occasional users who seek a remarkable experience with GPT-4 without a subscription, and who desire voice interaction capabilities. TalkGPT adopts a Pay-As-You-Go approach, inviting users to input an OpenAI API token for connection, subsequently billing them approximately $0.01 for every query sent to GPT-4. The app also employs an Automatic Speech Recognition model from Hugging Face 🤗 for speech transcription and utilizes a Text-to-Speech model from Hugging Face 🤗 to convert text into speech. These Hugging Face models are essential for voice communication.
 
-## Websites & Blog Post (Tutorial)
-- Streamlit Website - [Link](https://talk-gpt.streamlit.app/)
-- HuggingFace Space - [Link](https://huggingface.co/spaces/mabrouk/talkgpt)
-- Medium Article - [Link](https://medium.com/@Mubarak_Ganiyu/talkgpt-voice-integration-with-chatgpt-dfbd02a0ceab)
 ## References
 The two articles below served as an inspiration for building TalkGPT
 
