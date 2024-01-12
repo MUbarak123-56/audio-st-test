@@ -119,7 +119,7 @@ def generate_llm_response():
   for i in range(len(st.session_state.messages)):
       use_messages.append({"role": st.session_state.messages[i]["role"], "content": st.session_state.messages[i]["content"]})
 
-  response = client.chat.completions.create((
+  response = client.chat.completions.create(
     model=llm,
     messages=use_messages,
     temperature = temp,
