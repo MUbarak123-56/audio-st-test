@@ -11,6 +11,7 @@ import torch
 import os
 import base64
 import pandas as pd
+from openai import OpenAI
 
 st.set_page_config(layout='wide', page_title = "TalkGPT 🎤")
 with open("style.css")as f:
@@ -77,6 +78,7 @@ with st.sidebar:
         gender_select = st.selectbox("Choose the gender of your speaker", ["Male", "Female"], index = 1)
 
 openai.api_key = openai_api_key
+client = OpenAI()
 
 @st.cache_data()
 def speech_embed():
@@ -117,7 +119,7 @@ def generate_llm_response():
   for i in range(len(st.session_state.messages)):
       use_messages.append({"role": st.session_state.messages[i]["role"], "content": st.session_state.messages[i]["content"]})
 
-  response = openai.ChatCompletion.create(
+  response = client.chat.completions.create((
     model=llm,
     messages=use_messages,
     temperature = temp,
