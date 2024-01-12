@@ -78,7 +78,7 @@ with st.sidebar:
         gender_select = st.selectbox("Choose the gender of your speaker", ["Male", "Female"], index = 1)
 
 openai.api_key = openai_api_key
-person = OpenAI()
+#person = OpenAI()
 
 @st.cache_data()
 def speech_embed():
@@ -119,7 +119,7 @@ def generate_llm_response():
   for i in range(len(st.session_state.messages)):
       use_messages.append({"role": st.session_state.messages[i]["role"], "content": st.session_state.messages[i]["content"]})
 
-  response = person.completions.create(
+  response = openai.chat.completions.create(
     model=llm,
     messages=use_messages,
     temperature = temp,
