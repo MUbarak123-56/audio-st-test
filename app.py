@@ -125,7 +125,7 @@ def generate_llm_response():
     temperature = temp,
     top_p = top_percent, 
   )
-  return response["choices"][0]["message"]["content"]
+  return response.choices[0].message.content
 
 
 if "messages" not in st.session_state.keys():
