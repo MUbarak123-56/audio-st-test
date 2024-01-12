@@ -1,7 +1,7 @@
 streamlit==1.26.0
 audio-recorder-streamlit
 transformers
-openai
+openai==1.3.7
 torch
 numpy
 scipy
